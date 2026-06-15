@@ -6,6 +6,21 @@
 <title>POS Móvil — Dashboard de Ventas</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
+  /* LOGIN */
+  #login-screen { position: fixed; inset: 0; background: #1A1A1A; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+  #login-screen.hidden { display: none; }
+  .login-box { background: #FFFFFF; border-radius: 16px; padding: 2.5rem 2rem; width: 100%; max-width: 360px; text-align: center; }
+  .login-logo { background: #E2001A; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; padding: 6px 14px; margin-bottom: 1.5rem; }
+  .login-logo span { background: #F5A800; color: #1A1A1A; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; padding: 3px 8px; border-radius: 4px; }
+  .login-subtitle { font-size: 13px; color: #6B6B6B; margin-bottom: 1.75rem; }
+  .login-field { margin-bottom: 1rem; text-align: left; }
+  .login-field label { font-size: 11px; font-weight: 600; color: #6B6B6B; text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px; }
+  .login-field input { width: 100%; padding: 10px 14px; border: 1px solid #E0E0E0; border-radius: 8px; font-size: 14px; color: #1A1A1A; outline: none; transition: border-color 0.15s; }
+  .login-field input:focus { border-color: #E2001A; }
+  .login-btn { width: 100%; background: #E2001A; color: white; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 0.5rem; transition: background 0.15s; }
+  .login-btn:hover { background: #c00016; }
+  .login-error { font-size: 12px; color: #E2001A; margin-top: 10px; min-height: 18px; }
+</style>
   :root {
     --oxxo-red: #E2001A;
     --oxxo-yellow: #F5A800;
@@ -114,6 +129,24 @@
 </style>
 </head>
 <body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><span>OXXO</span></div>
+    <p class="login-subtitle">POS Móvil — Dashboard de Ventas</p>
+    <div class="login-field">
+      <label>Usuario</label>
+      <input type="text" id="login-user" placeholder="Usuario" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Ingresar</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
 
 <header class="header">
   <div class="header-logo">
@@ -708,6 +741,17 @@ function renderInactivas() {
 // AUTO LOAD CSV FROM GITHUB
 const CSV_URL = "https://raw.githubusercontent.com/Alanpec25/Pos-Movil-Dashboard/main/PM_Ventas_Dash_AI.csv";
 
+function doLogin() {
+  const user = document.getElementById("login-user").value.trim();
+  const pass = document.getElementById("login-pass").value.trim();
+  if (user === "admin" && pass === "Comercio1") {
+    document.getElementById("login-screen").classList.add("hidden");
+    autoLoadCSV();
+  } else {
+    document.getElementById("login-error").textContent = "Usuario o contraseña incorrectos.";
+  }
+}
+
 async function autoLoadCSV() {
   try {
     const res = await fetch(CSV_URL + "?t=" + Date.now());
@@ -720,7 +764,9 @@ async function autoLoadCSV() {
   }
 }
 
-window.addEventListener("load", autoLoadCSV);
+window.addEventListener("load", function() {
+  document.getElementById("login-user").focus();
+});
 
 // FILE READER
 document.getElementById('file-input').addEventListener('change', e=>{
