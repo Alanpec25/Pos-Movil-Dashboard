@@ -431,14 +431,9 @@ function renderReg(){
   var tj=fd.reduce(function(s,r){return s+r.TJ;},0);
   var txns=fd.length;
 
-  // KPIs — solo mostrar cuando hay región seleccionada
-  if(reg){
-    document.getElementById('kpi-reg').innerHTML='<div class="kpi-card ar"><div class="kpi-label">Venta total</div><div class="kpi-value">'+fmtK(tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Tarjeta</div><div class="kpi-value">'+fmtK(tj)+'</div><div class="kpi-sub">'+pct(tj,tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Efectivo</div><div class="kpi-value">'+fmtK(ef)+'</div><div class="kpi-sub">'+pct(ef,tot)+'</div></div><div class="kpi-card ag"><div class="kpi-label">Transacciones</div><div class="kpi-value">'+txns.toLocaleString()+'</div></div><div class="kpi-card ar"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">'+(txns>0?fmt(tot/txns):'--')+'</div></div>';
-    document.getElementById('kpi-reg').style.display='grid';
-  } else {
-    document.getElementById('kpi-reg').innerHTML='';
-    document.getElementById('kpi-reg').style.display='none';
-  }
+  // KPIs — siempre visibles
+  document.getElementById('kpi-reg').innerHTML='<div class="kpi-card ar"><div class="kpi-label">Venta total</div><div class="kpi-value">'+fmtK(tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Tarjeta</div><div class="kpi-value">'+fmtK(tj)+'</div><div class="kpi-sub">'+pct(tj,tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Efectivo</div><div class="kpi-value">'+fmtK(ef)+'</div><div class="kpi-sub">'+pct(ef,tot)+'</div></div><div class="kpi-card ag"><div class="kpi-label">Transacciones</div><div class="kpi-value">'+txns.toLocaleString()+'</div></div><div class="kpi-card ar"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">'+(txns>0?fmt(tot/txns):'--')+'</div></div>';
+  document.getElementById('kpi-reg').style.display='grid';
 
   if(!reg){
     // Vista general — Top Regiones con barra de progreso
