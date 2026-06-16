@@ -73,20 +73,20 @@ tr:hover td{background:var(--gray);}
 .filter-bar select,.filter-bar input[type=date]{font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);cursor:pointer;}
 
 /* SEARCHABLE SELECT */
-.search-wrap{position:relative;display:inline-block;}
-.search-input{font-size:13px;padding:6px 30px 6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);width:220px;outline:none;}
-.search-input:focus{border-color:var(--red);}
-.search-arrow{position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--mid);font-size:11px;}
-.search-dropdown{position:absolute;top:calc(100% + 4px);left:0;width:100%;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.1);z-index:200;max-height:220px;overflow-y:auto;display:none;}
-.search-dropdown.open{display:block;}
-.search-option{padding:8px 12px;cursor:pointer;font-size:13px;color:var(--dark);}
-.search-option:hover,.search-option.selected{background:var(--red-light);color:var(--red);}
-.search-option.all{color:var(--mid);font-style:italic;}
+
+
+
+
+
+
+
+
+
 
 .upload-zone{border:2px dashed var(--border);border-radius:10px;padding:1.5rem;text-align:center;margin-bottom:1.5rem;background:#fff;cursor:pointer;}
 #file-input{display:none;}
 .cod{font-family:monospace;font-size:12px;background:var(--gray);padding:1px 5px;border-radius:3px;color:var(--mid);}
-@media(max-width:700px){.grid-2{grid-template-columns:1fr;}.content{padding:1rem;}.header{padding:0 1rem;}.kpi-value{font-size:20px;}.search-input{width:160px;}}
+@media(max-width:700px){.grid-2{grid-template-columns:1fr;}.content{padding:1rem;}.header{padding:0 1rem;}.kpi-value{font-size:20px;}}
 </style>
 </head>
 <body>
@@ -160,11 +160,7 @@ tr:hover td{background:var(--gray);}
   <div class="panel" id="panel-regiones">
     <div class="filter-bar">
       <label>Región</label>
-      <div class="search-wrap">
-        <input class="search-input" id="s-reg-input" placeholder="Buscar región..." oninput="filterSearch('s-reg')" onfocus="openDropdown('s-reg')" autocomplete="off">
-        <span class="search-arrow">&#9660;</span>
-        <div class="search-dropdown" id="s-reg-drop"></div>
-      </div>
+      <select id="f-reg" onchange="onRegChange()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);min-width:200px;"><option value="">Todas las regiones</option></select>
       <label>Mes</label>
       <select id="f-reg-mes" onchange="renderReg()"><option value="">Todos los meses</option></select>
     </div>
@@ -180,17 +176,9 @@ tr:hover td{background:var(--gray);}
   <div class="panel" id="panel-tiendas">
     <div class="filter-bar">
       <label>Región</label>
-      <div class="search-wrap">
-        <input class="search-input" id="s-t-reg-input" placeholder="Buscar región..." oninput="filterSearch('s-t-reg');filterTiendas()" onfocus="openDropdown('s-t-reg')" autocomplete="off">
-        <span class="search-arrow">&#9660;</span>
-        <div class="search-dropdown" id="s-t-reg-drop"></div>
-      </div>
+      <select id="f-t-reg" onchange="filterTiendas()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);min-width:200px;"><option value="">Todas las regiones</option></select>
       <label>Tienda</label>
-      <div class="search-wrap">
-        <input class="search-input" id="s-tienda-input" placeholder="Buscar tienda..." oninput="filterSearch('s-tienda')" onfocus="openDropdown('s-tienda')" autocomplete="off">
-        <span class="search-arrow">&#9660;</span>
-        <div class="search-dropdown" id="s-tienda-drop"></div>
-      </div>
+      <select id="f-tienda" onchange="renderTienda()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);min-width:220px;"><option value="">Selecciona una tienda</option></select>
       <label>Mes</label>
       <select id="f-t-mes" onchange="renderTienda()"><option value="">Todos los meses</option></select>
     </div>
@@ -242,11 +230,7 @@ tr:hover td{background:var(--gray);}
     </div>
     <div class="filter-bar">
       <label>Región</label>
-      <div class="search-wrap">
-        <input class="search-input" id="s-i-reg-input" placeholder="Buscar región..." oninput="filterSearch('s-i-reg')" onfocus="openDropdown('s-i-reg')" autocomplete="off">
-        <span class="search-arrow">&#9660;</span>
-        <div class="search-dropdown" id="s-i-reg-drop"></div>
-      </div>
+      <select id="f-i-reg" onchange="renderInact()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);min-width:200px;"><option value="">Todas las regiones</option></select>
       <label>Antigüedad</label>
       <select id="f-i-dias" onchange="renderInact()">
         <option value="7">Más de 7 días</option>
@@ -278,20 +262,10 @@ var CSV_URL=BASE+'PM_Ventas_Dash_AI.csv';
 var CAT_URL=BASE+'tiendas.csv';
 
 // Valores seleccionados de los buscadores
-var SEL={
-  'reg':'',        // región en pestaña Regiones
-  't-reg':'',      // región en pestaña Tiendas
-  'tienda':'',     // tienda en pestaña Tiendas
-  'i-reg':''       // región en pestaña Inactivas
-};
+
 
 // Opciones disponibles por buscador
-var OPTS={
-  'reg':[],
-  't-reg':[],
-  'tienda':[],
-  'i-reg':[]
-};
+
 
 function getNombre(cr){return CAT[cr]?CAT[cr].n:'-';}
 function getRegNombre(crReg){
@@ -317,82 +291,50 @@ function pct(a,b){return b>0?(a/b*100).toFixed(1)+'%':'0%';}
 function dch(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
 function cod(s){return '<span class="cod">'+s+'</span>';}
 
-// ---- SEARCHABLE DROPDOWN ----
-var activeDropdown=null;
+// ---- FILTROS ----
 
-function buildDropdown(id,opts){
-  OPTS[id]=opts;
+function onRegChange(){
+  SEL['reg'] = document.getElementById('f-reg').value;
+  renderReg();
 }
 
-function renderDropdown(id,query){
-  var drop=document.getElementById('s-'+id+'-drop');
-  if(!drop)return;
-  var q=(query||'').toLowerCase();
-  var filtered=OPTS[id].filter(function(o){
-    return !q||o.label.toLowerCase().indexOf(q)>=0||o.value.toLowerCase().indexOf(q)>=0;
+function filterTiendas(){
+  var reg = document.getElementById('f-t-reg').value;
+  SEL['t-reg'] = reg;
+  fillTiendasSelect(reg);
+  SEL['tienda'] = '';
+  renderTienda();
+  renderTiendasTabla();
+}
+
+function fillTiendasSelect(reg){
+  var sel = document.getElementById('f-tienda');
+  sel.innerHTML = '<option value="">Selecciona una tienda</option>';
+  var ts = [...new Set(D.filter(function(r){return !reg||r.CR_REGION===reg;}).map(function(r){return r.CR_TIENDA;}))].sort();
+  ts.forEach(function(t){
+    var o = document.createElement('option');
+    o.value = t;
+    o.textContent = t + ' - ' + getNombre(t);
+    sel.appendChild(o);
   });
-  var html='<div class="search-option all" data-id="'+id+'" data-value="" data-label="Todas">Todas</div>';
-  filtered.slice(0,100).forEach(function(o){
-    var sel=SEL[id]===o.value?' selected':'';
-    var safeLabel=o.label.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
-    html+='<div class="search-option'+sel+'" data-id="'+id+'" data-value="'+o.value+'" data-label="'+safeLabel+'">'+o.label+'</div>';
-  });
-  if(filtered.length>100)html+='<div class="search-option all">... '+(filtered.length-100)+' mas. Escribe para filtrar.</div>';
-  drop.innerHTML=html;
 }
-
-function openDropdown(id){
-  if(activeDropdown&&activeDropdown!==id){
-    var prev=document.getElementById('s-'+activeDropdown+'-drop');
-    if(prev)prev.classList.remove('open');
-  }
-  activeDropdown=id;
-  renderDropdown(id,document.getElementById('s-'+id+'-input').value);
-  document.getElementById('s-'+id+'-drop').classList.add('open');
-}
-
-function filterSearch(id){
-  renderDropdown(id,document.getElementById('s-'+id+'-input').value);
-  if(activeDropdown!==id)openDropdown(id);
-  else document.getElementById('s-'+id+'-drop').classList.add('open');
-}
-
-function selectOpt(id,value,label){
-  SEL[id]=value;
-  document.getElementById('s-'+id+'-input').value=value?label:'';
-  document.getElementById('s-'+id+'-drop').classList.remove('open');
-  activeDropdown=null;
-  if(id==='reg')renderReg();
-  if(id==='t-reg'){fillTiendasOpts();renderTiendasTabla();}
-  if(id==='tienda')renderTienda();
-  if(id==='i-reg')renderInact();
-}
-
-// Usar mousedown para capturar antes del blur
-document.addEventListener('mousedown',function(e){
-  var opt=e.target.closest?e.target.closest('.search-option'):null;
-  if(opt&&opt.getAttribute('data-id')){
-    e.preventDefault();
-    selectOpt(opt.getAttribute('data-id'),opt.getAttribute('data-value'),opt.getAttribute('data-label'));
-    return;
-  }
-  var isSearch=e.target.classList.contains('search-input')||e.target.classList.contains('search-arrow')||e.target.classList.contains('search-wrap');
-  if(!isSearch&&activeDropdown){
-    document.getElementById('s-'+activeDropdown+'-drop').classList.remove('open');
-    activeDropdown=null;
-  }
-});
 
 function fillRegOpts(){
   var regs=[...new Set(D.map(function(r){return r.CR_REGION;}))].sort();
-  var opts=regs.map(function(r){return{value:r,label:r+' - '+getRegNombre(r)};});
-  buildDropdown('reg',opts);
-  buildDropdown('t-reg',opts);
-  buildDropdown('i-reg',opts);
-  // tendencias select
-  var selTend=document.getElementById('f-tend-reg');
-  selTend.innerHTML='<option value="">Todas</option>';
-  regs.forEach(function(r){var o=document.createElement('option');o.value=r;o.textContent=r+' - '+getRegNombre(r);selTend.appendChild(o);});
+  ['f-reg','f-t-reg','f-i-reg','f-tend-reg'].forEach(function(id){
+    var sel=document.getElementById(id);
+    if(!sel)return;
+    var first=sel.options[0];
+    sel.innerHTML='';
+    sel.appendChild(first);
+    regs.forEach(function(r){
+      var o=document.createElement('option');
+      o.value=r;
+      o.textContent=r+' - '+getRegNombre(r);
+      sel.appendChild(o);
+    });
+  });
+  fillTiendasSelect('');
 }
 
 function fillTiendasOpts(){
@@ -492,7 +434,7 @@ function renderGen(){
 }
 
 function renderReg(){
-  var reg=SEL['reg'];
+  var reg=document.getElementById('f-reg').value;
   var mes=document.getElementById('f-reg-mes').value;
   var fd=D.filter(function(r){return(!reg||r.CR_REGION===reg)&&(!mes||r.FECHA.slice(0,7)===mes);});
   var tot=fd.reduce(function(s,r){return s+r.TOT;},0);
@@ -517,7 +459,7 @@ function renderTiendasTabla(){
 }
 
 function renderTienda(){
-  var t=SEL['tienda'];
+  var t=document.getElementById('f-tienda').value;
   var mes=document.getElementById('f-t-mes').value;
   document.getElementById('kpi-tienda').innerHTML='';
   document.getElementById('card-t-chart').style.display='none';
@@ -591,7 +533,7 @@ function renderInact(){
   document.getElementById('ki-act').textContent=todas.filter(function(t){return t.fecha>=s7;}).length;
   document.getElementById('ki-30').textContent=todas.filter(function(t){return t.fecha<s7&&t.fecha>=s30;}).length;
   document.getElementById('ki-m30').textContent=todas.filter(function(t){return t.fecha<s30;}).length;
-  var rf=SEL['i-reg'];
+  var rf=document.getElementById('f-i-reg').value;
   var df=parseInt(document.getElementById('f-i-dias').value)||7;
   var cx=new Date(ult);cx.setDate(cx.getDate()-(df-1));var sx=cx.toISOString().slice(0,10);
   var inact=todas.filter(function(t){return t.fecha<sx&&(!rf||t.region===rf);}).map(function(t){return Object.assign({},t,{dias:Math.floor((new Date(ult)-new Date(t.fecha))/(86400000))});}).sort(function(a,b){return b.dias-a.dias;});
