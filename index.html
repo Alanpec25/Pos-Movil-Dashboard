@@ -65,6 +65,10 @@ tr:hover td{background:var(--gray);}
 .filter-bar{display:flex;gap:10px;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;}
 .filter-bar label{font-size:12px;color:var(--mid);font-weight:500;}
 .filter-bar select,.filter-bar input[type=date]{font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);cursor:pointer;min-width:180px;}
+.dl-btn{background:#2E7D32;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;margin-left:auto;}
+.dl-btn:hover{background:#1b5e20;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.card-header .card-title{margin-bottom:0;}
 .upload-zone{border:2px dashed var(--border);border-radius:10px;padding:1.5rem;text-align:center;margin-bottom:1.5rem;background:#fff;cursor:pointer;}
 #file-input{display:none;}
 .cod{font-family:monospace;font-size:12px;background:var(--gray);padding:1px 5px;border-radius:3px;color:var(--mid);}
@@ -151,12 +155,12 @@ tr:hover td{background:var(--gray);}
     </div>
     <div class="kpi-grid" id="kpi-reg"></div>
     <div class="card" id="card-reg-tabla">
-      <div class="card-title" id="lbl-reg-tabla">Top Regiones</div>
+      <div class="card-header"><div class="card-title" id="lbl-reg-tabla">Top Regiones</div><button class="dl-btn" onclick="downloadTable('tb-reg-resumen','top_regiones')">&#8595; Descargar</button></div>
       <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>% del total</th></tr></thead>
       <tbody id="tb-reg-resumen"></tbody></table>
     </div>
     <div class="card" id="card-reg-tiendas" style="display:none;">
-      <div class="card-title" id="lbl-reg-tiendas">Top Tiendas de la Región</div>
+      <div class="card-header"><div class="card-title" id="lbl-reg-tiendas">Top Tiendas de la Región</div><button class="dl-btn" onclick="downloadTable('tb-reg-tiendas','top_tiendas_region')">&#8595; Descargar</button></div>
       <table><thead><tr><th>CR Tienda</th><th>Nombre Tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>% de la región</th></tr></thead>
       <tbody id="tb-reg-tiendas"></tbody></table>
     </div>
@@ -174,11 +178,11 @@ tr:hover td{background:var(--gray);}
     </div>
     <div class="kpi-grid" id="kpi-tienda"></div>
     <div class="card" id="card-t-chart" style="display:none;"><div class="card-title">Venta diaria</div><div style="position:relative;height:200px;"><canvas id="ch-t-diario"></canvas></div></div>
-    <div class="card" id="card-t-detalle" style="display:none;"><div class="card-title">Detalle de ventas por día</div>
+    <div class="card" id="card-t-detalle" style="display:none;"><div class="card-header"><div class="card-title">Detalle de ventas por día</div><button class="dl-btn" onclick="downloadTable('tb-t-detalle','detalle_ventas_dia')">&#8595; Descargar</button></div>
       <table><thead><tr><th>Fecha</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th></tr></thead>
       <tbody id="tb-t-detalle"></tbody></table>
     </div>
-    <div class="card"><div class="card-title">Todas las Tiendas</div>
+    <div class="card"><div class="card-header"><div class="card-title">Todas las Tiendas</div><button class="dl-btn" onclick="downloadTable('tb-tiendas','todas_tiendas')">&#8595; Descargar</button></div>
       <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>CR Tienda</th><th>Nombre Tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>Ticket prom.</th></tr></thead>
       <tbody id="tb-tiendas"></tbody></table>
     </div>
@@ -200,7 +204,7 @@ tr:hover td{background:var(--gray);}
     <div class="card"><div class="card-title">Crecimiento de tiendas activas por mes</div><div style="position:relative;height:180px;"><canvas id="ch-crec"></canvas></div></div>
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px;">
-        <span class="card-title" style="margin-bottom:0;">Ranking Tiendas — menor a mayor venta</span>
+        <span class="card-title" style="margin-bottom:0;">Ranking Tiendas — menor a mayor venta</span><button class="dl-btn" onclick="downloadTable('tb-tend-ranking','ranking_tiendas')">&#8595; Descargar</button>
         <div class="filter-bar" style="margin-bottom:0;">
           <label>Región</label>
           <select id="f-tend-reg" onchange="renderRanking()" style="min-width:160px;"><option value="">Todas</option></select>
@@ -229,7 +233,7 @@ tr:hover td{background:var(--gray);}
         <option value="60">Más de 60 días</option>
       </select>
     </div>
-    <div class="card"><div class="card-title">Tiendas sin venta en los últimos 7 días</div>
+    <div class="card"><div class="card-header"><div class="card-title">Tiendas sin venta en los últimos 7 días</div><button class="dl-btn" onclick="downloadTable('tb-inact','tiendas_inactivas')">&#8595; Descargar</button></div>
       <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>CR Tienda</th><th>Nombre Tienda</th><th>Última venta</th><th class="tdc">Días sin venta</th><th>Estado</th></tr></thead>
       <tbody id="tb-inact"></tbody></table>
     </div>
@@ -538,6 +542,29 @@ function renderInact(){
   var cx=new Date(ult);cx.setDate(cx.getDate()-(df-1));var sx=cx.toISOString().slice(0,10);
   var inact=todas.filter(function(t){return t.fecha<sx&&(!rf||t.region===rf);}).map(function(t){return Object.assign({},t,{dias:Math.floor((new Date(ult)-new Date(t.fecha))/(86400000))});}).sort(function(a,b){return b.dias-a.dias;});
   document.getElementById('tb-inact').innerHTML=inact.map(function(t){var b=t.dias>30?'<span class="badge badge-red">+'+t.dias+' días</span>':'<span class="badge badge-yellow">'+t.dias+' días</span>';var d=t.dias>30?'dot-r':'dot-y';return'<tr><td>'+cod(t.region)+'</td><td>'+getRegNombre(t.region)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.fecha+'</td><td class="tdc">'+b+'</td><td><span class="dot '+d+'"></span>'+(t.dias>30?'Atención urgente':'Sin venta reciente')+'</td></tr>';}).join('');
+}
+
+function downloadTable(tableId, filename){
+  var table=document.getElementById(tableId);
+  if(!table)return;
+  var rows=table.querySelectorAll('tr');
+  var csv=[];
+  rows.forEach(function(row){
+    var cols=row.querySelectorAll('th,td');
+    var rowData=[];
+    cols.forEach(function(col){
+      var text=col.innerText.replace(/,/g,' ').replace(/
+/g,' ').trim();
+      rowData.push('"'+text+'"');
+    });
+    csv.push(rowData.join(','));
+  });
+  var blob=new Blob(['﻿'+csv.join('
+')],{type:'text/csv;charset=utf-8;'});
+  var link=document.createElement('a');
+  link.href=URL.createObjectURL(blob);
+  link.download=filename+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  link.click();
 }
 
 async function autoLoad(){
