@@ -24,8 +24,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-error{font-size:12px;color:var(--red);margin-top:10px;min-height:18px;}
 #loading-screen{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:8888;}
 #loading-screen.hidden{display:none;}
-.loading-logo{background:var(--red);border-radius:8px;padding:6px 14px;margin-bottom:1.5rem;}
-.loading-logo span{background:var(--yellow);color:var(--dark);font-size:24px;font-weight:800;padding:3px 8px;border-radius:4px;}
+
+
 .loading-msg{font-size:13px;color:var(--mid);margin-top:1rem;}
 .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -103,7 +103,7 @@ tr:hover td{background:var(--gray);}
 </div>
 
 <div id="loading-screen" class="hidden">
-  <div class="loading-logo"><span>OXXO</span></div>
+  <img src="https://raw.githubusercontent.com/Alanpec25/Pos-Movil-Dashboard/main/oxxo_logo.png" alt="OXXO" style="height:70px;object-fit:contain;margin-bottom:1.5rem;">
   <div class="spinner"></div>
   <p class="loading-msg" id="loading-msg">Cargando catalogo de tiendas...</p>
 </div>
