@@ -12,8 +12,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 #login-screen{position:fixed;inset:0;background:#1A1A1A;display:flex;align-items:center;justify-content:center;z-index:9999;}
 #login-screen.hidden{display:none;}
 .login-box{background:#fff;border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:360px;text-align:center;}
-.login-logo{background:var(--red);display:inline-flex;align-items:center;justify-content:center;border-radius:8px;padding:6px 14px;margin-bottom:1.5rem;}
-.login-logo span{background:var(--yellow);color:var(--dark);font-size:20px;font-weight:800;padding:3px 8px;border-radius:4px;}
+
+.login-logo{margin-bottom:1.5rem;display:flex;justify-content:center;}.login-logo img{height:80px;object-fit:contain;}
 .login-subtitle{font-size:13px;color:var(--mid);margin-bottom:1.75rem;}
 .login-field{margin-bottom:1rem;text-align:left;}
 .login-field label{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:6px;}
@@ -30,7 +30,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .header{background:var(--red);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;}
-.logo-box{background:var(--yellow);color:var(--dark);font-size:18px;font-weight:800;padding:4px 10px;border-radius:4px;}
+
 .header-title{color:#fff;font-size:14px;font-weight:500;margin-left:12px;}
 .header-right{display:flex;align-items:center;gap:16px;}
 .last-update{font-size:12px;color:rgba(255,255,255,.7);}
@@ -62,7 +62,6 @@ tr:hover td{background:var(--gray);}
 .badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;}
 .badge-red{background:var(--red-light);color:var(--red);}
 .badge-yellow{background:var(--yellow-light);color:#9a6800;}
-.badge-green{background:var(--green-light);color:var(--green);}
 .prog-wrap{background:var(--gray);border-radius:4px;height:6px;overflow:hidden;margin-top:4px;}
 .prog-bar{height:100%;border-radius:4px;background:var(--red);}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;}
@@ -72,17 +71,29 @@ tr:hover td{background:var(--gray);}
 .filter-bar{display:flex;gap:10px;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;}
 .filter-bar label{font-size:12px;color:var(--mid);font-weight:500;}
 .filter-bar select,.filter-bar input[type=date]{font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);cursor:pointer;}
+
+/* SEARCHABLE SELECT */
+.search-wrap{position:relative;display:inline-block;}
+.search-input{font-size:13px;padding:6px 30px 6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);width:220px;outline:none;}
+.search-input:focus{border-color:var(--red);}
+.search-arrow{position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--mid);font-size:11px;}
+.search-dropdown{position:absolute;top:calc(100% + 4px);left:0;width:100%;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.1);z-index:200;max-height:220px;overflow-y:auto;display:none;}
+.search-dropdown.open{display:block;}
+.search-option{padding:8px 12px;cursor:pointer;font-size:13px;color:var(--dark);}
+.search-option:hover,.search-option.selected{background:var(--red-light);color:var(--red);}
+.search-option.all{color:var(--mid);font-style:italic;}
+
 .upload-zone{border:2px dashed var(--border);border-radius:10px;padding:1.5rem;text-align:center;margin-bottom:1.5rem;background:#fff;cursor:pointer;}
 #file-input{display:none;}
 .cod{font-family:monospace;font-size:12px;background:var(--gray);padding:1px 5px;border-radius:3px;color:var(--mid);}
-@media(max-width:700px){.grid-2{grid-template-columns:1fr;}.content{padding:1rem;}.header{padding:0 1rem;}.kpi-value{font-size:20px;}}
+@media(max-width:700px){.grid-2{grid-template-columns:1fr;}.content{padding:1rem;}.header{padding:0 1rem;}.kpi-value{font-size:20px;}.search-input{width:160px;}}
 </style>
 </head>
 <body>
 
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo"><span>OXXO</span></div>
+    <div class="login-logo"><img src="https://raw.githubusercontent.com/Alanpec25/Pos-Movil-Dashboard/main/oxxo_logo.png" alt="OXXO"></div>
     <p class="login-subtitle">POS Movil &mdash; Dashboard de Ventas</p>
     <div class="login-field"><label>Usuario</label><input type="text" id="lu" placeholder="Usuario"></div>
     <div class="login-field"><label>Contrasena</label><input type="password" id="lp" placeholder="Contrasena" onkeydown="if(event.key==='Enter')doLogin()"></div>
@@ -99,7 +110,7 @@ tr:hover td{background:var(--gray);}
 
 <header class="header">
   <div style="display:flex;align-items:center;">
-    <div class="logo-box">OXXO</div>
+    <img src="https://raw.githubusercontent.com/Alanpec25/Pos-Movil-Dashboard/main/oxxo_logo.png" alt="OXXO" style="height:38px;object-fit:contain;border-radius:4px;">
     <span class="header-title">POS Movil &mdash; Dashboard de Ventas</span>
   </div>
   <div class="header-right">
@@ -111,8 +122,8 @@ tr:hover td{background:var(--gray);}
 
 <nav class="tabs-bar">
   <div class="tab active" onclick="showTab('general',this)">General</div>
-  <div class="tab" onclick="showTab('regiones',this)">Por region</div>
-  <div class="tab" onclick="showTab('tiendas',this)">Por tienda</div>
+  <div class="tab" onclick="showTab('regiones',this)">Por Región</div>
+  <div class="tab" onclick="showTab('tiendas',this)">Por Tienda</div>
   <div class="tab" onclick="showTab('tendencias',this)">Tendencias</div>
   <div class="tab" onclick="showTab('inactivas',this)">Inactivas</div>
 </nav>
@@ -124,6 +135,7 @@ tr:hover td{background:var(--gray);}
     <p style="color:var(--mid);font-size:13px;margin-top:6px;">Haz clic aqui o arrastra el archivo CSV</p>
   </div>
 
+  <!-- GENERAL -->
   <div class="panel active" id="panel-general">
     <div class="kpi-grid">
       <div class="kpi-card ar"><div class="kpi-label">Venta total</div><div class="kpi-value" id="k-total">-</div><div class="kpi-sub" id="k-periodo">-</div></div>
@@ -139,84 +151,111 @@ tr:hover td{background:var(--gray);}
       <div class="card"><div class="card-title">Actividad por hora</div><div style="position:relative;height:200px;"><canvas id="ch-hora"></canvas></div></div>
     </div>
     <div class="card"><div class="card-title">Top regiones</div>
-      <table><thead><tr><th>CR Region</th><th>Nombre region</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>% del total</th></tr></thead>
+      <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>% del total</th></tr></thead>
       <tbody id="tb-reg-gen"></tbody></table>
     </div>
   </div>
 
+  <!-- REGIONES -->
   <div class="panel" id="panel-regiones">
-    <div class="filter-bar"><label>Region</label>
-      <select id="f-reg" onchange="renderReg()"><option value="">Todas</option></select>
+    <div class="filter-bar">
+      <label>Región</label>
+      <div class="search-wrap">
+        <input class="search-input" id="s-reg-input" placeholder="Buscar región..." oninput="filterSearch('s-reg')" onfocus="openDropdown('s-reg')" onblur="closeDropdown('s-reg')" autocomplete="off">
+        <span class="search-arrow">&#9660;</span>
+        <div class="search-dropdown" id="s-reg-drop"></div>
+      </div>
+      <label>Mes</label>
+      <select id="f-reg-mes" onchange="renderReg()"><option value="">Todos los meses</option></select>
     </div>
     <div class="kpi-grid" id="kpi-reg"></div>
-    <div class="card"><div class="card-title">Venta por region / tienda</div><div style="position:relative;height:260px;"><canvas id="ch-reg"></canvas></div></div>
-    <div class="card"><div class="card-title">Detalle de tiendas</div>
-      <table><thead><tr><th>CR Tienda</th><th>Nombre tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>Ticket prom.</th></tr></thead>
+    <div class="card"><div class="card-title">Venta por Región / Tienda</div><div style="position:relative;height:260px;"><canvas id="ch-reg"></canvas></div></div>
+    <div class="card"><div class="card-title">Detalle de Tiendas</div>
+      <table><thead><tr><th>CR Tienda</th><th>Nombre Tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>Ticket prom.</th></tr></thead>
       <tbody id="tb-reg-tiendas"></tbody></table>
     </div>
   </div>
 
+  <!-- TIENDAS -->
   <div class="panel" id="panel-tiendas">
     <div class="filter-bar">
-      <label>Region</label><select id="f-t-reg" onchange="filterTiendas()"><option value="">Todas</option></select>
-      <label>Tienda</label><select id="f-tienda" onchange="renderTienda()"><option value="">Selecciona...</option></select>
-      <label>Mes</label><select id="f-t-mes" onchange="renderTienda()"><option value="">Todos los meses</option></select>
+      <label>Región</label>
+      <div class="search-wrap">
+        <input class="search-input" id="s-t-reg-input" placeholder="Buscar región..." oninput="filterSearch('s-t-reg');filterTiendas()" onfocus="openDropdown('s-t-reg')" onblur="closeDropdown('s-t-reg')" autocomplete="off">
+        <span class="search-arrow">&#9660;</span>
+        <div class="search-dropdown" id="s-t-reg-drop"></div>
+      </div>
+      <label>Tienda</label>
+      <div class="search-wrap">
+        <input class="search-input" id="s-tienda-input" placeholder="Buscar tienda..." oninput="filterSearch('s-tienda')" onfocus="openDropdown('s-tienda')" onblur="closeDropdown('s-tienda')" autocomplete="off">
+        <span class="search-arrow">&#9660;</span>
+        <div class="search-dropdown" id="s-tienda-drop"></div>
+      </div>
+      <label>Mes</label>
+      <select id="f-t-mes" onchange="renderTienda()"><option value="">Todos los meses</option></select>
     </div>
     <div class="kpi-grid" id="kpi-tienda"></div>
     <div class="card" id="card-t-chart" style="display:none;"><div class="card-title">Venta diaria</div><div style="position:relative;height:200px;"><canvas id="ch-t-diario"></canvas></div></div>
-    <div class="card" id="card-t-detalle" style="display:none;"><div class="card-title">Detalle de ventas por dia</div>
+    <div class="card" id="card-t-detalle" style="display:none;"><div class="card-title">Detalle de ventas por día</div>
       <table><thead><tr><th>Fecha</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th></tr></thead>
       <tbody id="tb-t-detalle"></tbody></table>
     </div>
-    <div class="card"><div class="card-title">Todas las tiendas</div>
-      <table><thead><tr><th>CR Region</th><th>Nombre region</th><th>CR Tienda</th><th>Nombre tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>Ticket prom.</th></tr></thead>
+    <div class="card"><div class="card-title">Todas las Tiendas</div>
+      <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>CR Tienda</th><th>Nombre Tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>Ticket prom.</th></tr></thead>
       <tbody id="tb-tiendas"></tbody></table>
     </div>
   </div>
 
+  <!-- TENDENCIAS -->
   <div class="panel" id="panel-tendencias">
     <div class="filter-bar">
       <label>Periodo</label>
-      <select id="f-tend" onchange="renderTend()"><option value="30">Ultimos 30 dias</option><option value="60">Ultimos 60 dias</option><option value="0">Todo el historial</option></select>
+      <select id="f-tend" onchange="renderTend()"><option value="30">Últimos 30 días</option><option value="60">Últimos 60 días</option><option value="0">Todo el historial</option></select>
       <label>Inicio</label><input type="date" id="f-tend-ini" onchange="renderTend()">
       <label>Fin</label><input type="date" id="f-tend-fin" onchange="renderTend()">
     </div>
-    <div class="card"><div class="card-title">Evolucion diaria de ventas</div><div style="position:relative;height:220px;"><canvas id="ch-diario"></canvas></div></div>
+    <div class="card"><div class="card-title">Evolución diaria de ventas</div><div style="position:relative;height:220px;"><canvas id="ch-diario"></canvas></div></div>
     <div class="grid-2">
-      <div class="card"><div class="card-title">Venta por dia de la semana</div><div style="position:relative;height:200px;"><canvas id="ch-diasem"></canvas></div></div>
+      <div class="card"><div class="card-title">Venta por día de la semana</div><div style="position:relative;height:200px;"><canvas id="ch-diasem"></canvas></div></div>
       <div class="card"><div class="card-title">Comparativa mensual</div><div style="position:relative;height:200px;"><canvas id="ch-mensual2"></canvas></div></div>
     </div>
     <div class="card"><div class="card-title">Crecimiento de tiendas activas por mes</div><div style="position:relative;height:180px;"><canvas id="ch-crec"></canvas></div></div>
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px;">
-        <span class="card-title" style="margin-bottom:0;">Ranking tiendas — menor a mayor venta</span>
+        <span class="card-title" style="margin-bottom:0;">Ranking Tiendas — menor a mayor venta</span>
         <div class="filter-bar" style="margin-bottom:0;">
-          <label>Region</label><select id="f-tend-reg" onchange="renderRanking()"><option value="">Todas</option></select>
+          <label>Región</label><select id="f-tend-reg" onchange="renderRanking()"><option value="">Todas</option></select>
         </div>
       </div>
-      <table><thead><tr><th>Pos.</th><th>CR Tienda</th><th>Nombre tienda</th><th>CR Region</th><th>Nombre region</th><th>Txns</th><th class="tdr">Total</th></tr></thead>
+      <table><thead><tr><th>Pos.</th><th>CR Tienda</th><th>Nombre Tienda</th><th>CR Región</th><th>Nombre Región</th><th>Txns</th><th class="tdr">Total</th></tr></thead>
       <tbody id="tb-tend-ranking"></tbody></table>
     </div>
   </div>
 
+  <!-- INACTIVAS -->
   <div class="panel" id="panel-inactivas">
     <div class="kpi-grid">
-      <div class="kpi-card ar"><div class="kpi-label">Total POS Movil habilitadas</div><div class="kpi-value" id="ki-hab">-</div><div class="kpi-sub">tiendas en el catalogo</div></div>
-      <div class="kpi-card ag"><div class="kpi-label"><span class="dot dot-g"></span>Activas (7 dias)</div><div class="kpi-value" id="ki-act">-</div><div class="kpi-sub">con al menos 1 venta</div></div>
-      <div class="kpi-card ay"><div class="kpi-label"><span class="dot dot-y"></span>Inactivas (7-30 dias)</div><div class="kpi-value" id="ki-30">-</div><div class="kpi-sub">sin venta reciente</div></div>
-      <div class="kpi-card ar"><div class="kpi-label"><span class="dot dot-r"></span>Inactivas (+30 dias)</div><div class="kpi-value" id="ki-m30">-</div><div class="kpi-sub">atencion urgente</div></div>
+      <div class="kpi-card ar"><div class="kpi-label">Total POS Móvil habilitadas</div><div class="kpi-value" id="ki-hab">443</div><div class="kpi-sub">tiendas habilitadas</div></div>
+      <div class="kpi-card ag"><div class="kpi-label"><span class="dot dot-g"></span>Activas (7 días)</div><div class="kpi-value" id="ki-act">-</div><div class="kpi-sub">con al menos 1 venta</div></div>
+      <div class="kpi-card ay"><div class="kpi-label"><span class="dot dot-y"></span>Inactivas (7-30 días)</div><div class="kpi-value" id="ki-30">-</div><div class="kpi-sub">sin venta reciente</div></div>
+      <div class="kpi-card ar"><div class="kpi-label"><span class="dot dot-r"></span>Inactivas (+30 días)</div><div class="kpi-value" id="ki-m30">-</div><div class="kpi-sub">atención urgente</div></div>
     </div>
     <div class="filter-bar">
-      <label>Region</label><select id="f-i-reg" onchange="renderInact()"><option value="">Todas</option></select>
-      <label>Antiguedad</label>
+      <label>Región</label>
+      <div class="search-wrap">
+        <input class="search-input" id="s-i-reg-input" placeholder="Buscar región..." oninput="filterSearch('s-i-reg')" onfocus="openDropdown('s-i-reg')" onblur="closeDropdown('s-i-reg')" autocomplete="off">
+        <span class="search-arrow">&#9660;</span>
+        <div class="search-dropdown" id="s-i-reg-drop"></div>
+      </div>
+      <label>Antigüedad</label>
       <select id="f-i-dias" onchange="renderInact()">
-        <option value="7">Mas de 7 dias</option>
-        <option value="30">Mas de 30 dias</option>
-        <option value="60">Mas de 60 dias</option>
+        <option value="7">Más de 7 días</option>
+        <option value="30">Más de 30 días</option>
+        <option value="60">Más de 60 días</option>
       </select>
     </div>
-    <div class="card"><div class="card-title">Tiendas sin venta en los ultimos 7 dias</div>
-      <table><thead><tr><th>CR Region</th><th>Nombre region</th><th>CR Tienda</th><th>Nombre tienda</th><th>Ultima venta</th><th class="tdc">Dias sin venta</th><th>Estado</th></tr></thead>
+    <div class="card"><div class="card-title">Tiendas sin venta en los últimos 7 días</div>
+      <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>CR Tienda</th><th>Nombre Tienda</th><th>Última venta</th><th class="tdc">Días sin venta</th><th>Estado</th></tr></thead>
       <tbody id="tb-inact"></tbody></table>
     </div>
   </div>
@@ -226,16 +265,39 @@ tr:hover td{background:var(--gray);}
 var D=[];
 var CH={};
 var CAT={};
-var TOTAL_HAB=443; // Tiendas habilitadas en POS Movil
+// ================================================
+// CONFIGURACION DEL PROYECTO
+// Actualizar este numero cuando se habiliten
+// nuevas tiendas en POS Movil
+// ================================================
+var TOTAL_HAB=443;
 var DIAS=['Lun','Mar','Mie','Jue','Vie','Sab','Dom'];
 var MLAB={'2025-01':'Ene 25','2025-02':'Feb 25','2025-03':'Mar 25','2025-04':'Abr 25','2025-05':'May 25','2025-06':'Jun 25','2025-07':'Jul 25','2025-08':'Ago 25','2025-09':'Sep 25','2025-10':'Oct 25','2025-11':'Nov 25','2025-12':'Dic 25','2026-01':'Ene','2026-02':'Feb','2026-03':'Mar','2026-04':'Abr','2026-05':'May','2026-06':'Jun','2026-07':'Jul','2026-08':'Ago','2026-09':'Sep','2026-10':'Oct','2026-11':'Nov','2026-12':'Dic'};
 var BASE='https://raw.githubusercontent.com/Alanpec25/Pos-Movil-Dashboard/main/';
 var CSV_URL=BASE+'PM_Ventas_Dash_AI.csv';
 var CAT_URL=BASE+'tiendas.csv';
 
+// Valores seleccionados de los buscadores
+var SEL={
+  'reg':'',        // región en pestaña Regiones
+  't-reg':'',      // región en pestaña Tiendas
+  'tienda':'',     // tienda en pestaña Tiendas
+  'i-reg':''       // región en pestaña Inactivas
+};
+
+// Opciones disponibles por buscador
+var OPTS={
+  'reg':[],
+  't-reg':[],
+  'tienda':[],
+  'i-reg':[]
+};
+
 function getNombre(cr){return CAT[cr]?CAT[cr].n:'-';}
-function getRegNombre(cr){return CAT[cr]?CAT[cr].rn:'-';}
-function getCRReg(cr){return CAT[cr]?CAT[cr].r:'-';}
+function getRegNombre(crReg){
+  var key=Object.keys(CAT).find(function(k){return CAT[k].r===crReg;});
+  return key?CAT[key].rn:crReg;
+}
 
 function doLogin(){
   var u=document.getElementById('lu').value.trim();
@@ -255,70 +317,81 @@ function pct(a,b){return b>0?(a/b*100).toFixed(1)+'%':'0%';}
 function dch(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
 function cod(s){return '<span class="cod">'+s+'</span>';}
 
-function parseCat(txt){
-  var lines=txt.trim().split('\n');
-  var cat={};
-  var total=0;
-  lines.slice(1).forEach(function(l){
-    var p=l.split(',');
-    var cr_reg=(p[0]||'').trim().toUpperCase();
-    var nom_reg=(p[1]||'').trim();
-    var cr_t=(p[2]||'').trim().toUpperCase();
-    var nom_t=(p[3]||'').trim();
-    if(cr_t){cat[cr_t]={n:nom_t,rn:nom_reg,r:cr_reg};total++;}
+// ---- SEARCHABLE DROPDOWN ----
+function buildDropdown(id,opts,allLabel){
+  OPTS[id]=opts;
+  renderDropdown(id,'');
+}
+
+function renderDropdown(id,query){
+  var drop=document.getElementById('s-'+id+'-drop');
+  var q=query.toLowerCase();
+  var filtered=OPTS[id].filter(function(o){return !q||o.label.toLowerCase().indexOf(q)>=0||o.value.toLowerCase().indexOf(q)>=0;});
+  var html='<div class="search-option all" onmousedown="selectOpt(\''+id+'\',\'\',\'Todas\')">Todas</div>';
+  filtered.slice(0,80).forEach(function(o){
+    html+='<div class="search-option'+(SEL[id]===o.value?' selected':'')+'" onmousedown="selectOpt(\''+id+'\',\''+o.value+'\',\''+o.label+'\')">'+o.label+'</div>';
   });
-  return{cat:cat,total:total};
+  if(filtered.length>80)html+='<div class="search-option all">...y '+(filtered.length-80)+' mas. Afina la busqueda.</div>';
+  drop.innerHTML=html;
 }
 
-function parseCSV(txt){
-  var lines=txt.trim().split('\n');
-  var s=0;
-  if(isNaN(parseFloat(lines[0].split(',')[4])))s=1;
-  return lines.slice(s).map(function(l){
-    var p=l.split(',');
-    return{CR_REGION:(p[0]||'').trim().toUpperCase(),CR_TIENDA:(p[1]||'').trim().toUpperCase(),FECHA:(p[2]||'').trim(),HORA:parseInt((p[3]||'00').trim().split(':')[0]),EF:parseFloat(p[4])||0,TJ:parseFloat(p[5])||0,TOT:parseFloat(p[6])||0,PTS:parseFloat(p[7])||0};
-  }).filter(function(r){return r.CR_TIENDA&&r.FECHA;});
+function filterSearch(id){
+  var q=document.getElementById('s-'+id+'-input').value;
+  renderDropdown(id,q);
 }
 
-function loadData(data){
-  D=data;
-  document.getElementById('loading-screen').classList.add('hidden');
-  document.getElementById('upzone').style.display='none';
-  var fechas=D.map(function(r){return r.FECHA;}).sort();
-  document.getElementById('lbl').textContent='Datos al '+fechas[fechas.length-1];
-  fillFilters();
-  renderGen();renderReg();renderTiendasTabla();renderTend();renderRanking();renderInact();
+function openDropdown(id){
+  renderDropdown(id,document.getElementById('s-'+id+'-input').value);
+  document.getElementById('s-'+id+'-drop').classList.add('open');
 }
 
-function fillFilters(){
+function closeDropdown(id){
+  setTimeout(function(){document.getElementById('s-'+id+'-drop').classList.remove('open');},150);
+}
+
+function selectOpt(id,value,label){
+  SEL[id]=value;
+  document.getElementById('s-'+id+'-input').value=value?label:'';
+  renderDropdown(id,'');
+  if(id==='reg')renderReg();
+  if(id==='t-reg'){fillTiendasOpts();renderTiendasTabla();}
+  if(id==='tienda')renderTienda();
+  if(id==='i-reg')renderInact();
+}
+
+function fillRegOpts(){
   var regs=[...new Set(D.map(function(r){return r.CR_REGION;}))].sort();
-  ['f-reg','f-t-reg','f-i-reg','f-tend-reg'].forEach(function(id){
-    var sel=document.getElementById(id);
-    var first=sel.options[0];
-    sel.innerHTML='';sel.appendChild(first);
-    regs.forEach(function(r){
-      var o=document.createElement('option');
-      o.value=r;
-      var rn=getRegNombre(Object.keys(CAT).find(function(k){return CAT[k].r===r;})||'');
-      o.textContent=r+(rn&&rn!=='-'?' - '+rn:'');
-      sel.appendChild(o);
-    });
-  });
+  var opts=regs.map(function(r){return{value:r,label:r+' - '+getRegNombre(r)};});
+  buildDropdown('reg',opts);
+  buildDropdown('t-reg',opts);
+  buildDropdown('i-reg',opts);
+  // tendencias select
+  var selTend=document.getElementById('f-tend-reg');
+  selTend.innerHTML='<option value="">Todas</option>';
+  regs.forEach(function(r){var o=document.createElement('option');o.value=r;o.textContent=r+' - '+getRegNombre(r);selTend.appendChild(o);});
+}
+
+function fillTiendasOpts(){
+  var reg=SEL['t-reg'];
+  var ts=[...new Set(D.filter(function(r){return !reg||r.CR_REGION===reg;}).map(function(r){return r.CR_TIENDA;}))]
+    .sort()
+    .map(function(t){return{value:t,label:t+' - '+getNombre(t)};});
+  buildDropdown('tienda',ts);
+  SEL['tienda']='';
+  document.getElementById('s-tienda-input').value='';
+}
+
+function filterTiendas(){fillTiendasOpts();renderTiendasTabla();}
+
+function fillMeses(){
   var meses=[...new Set(D.map(function(r){return r.FECHA.slice(0,7);}))].sort();
-  var sm=document.getElementById('f-t-mes');
-  sm.innerHTML='<option value="">Todos los meses</option>';
-  meses.forEach(function(m){var o=document.createElement('option');o.value=m;o.textContent=MLAB[m]||m;sm.appendChild(o);});
-  fillTiendas('');
+  ['f-reg-mes','f-t-mes'].forEach(function(id){
+    var sel=document.getElementById(id);
+    sel.innerHTML='<option value="">Todos los meses</option>';
+    meses.forEach(function(m){var o=document.createElement('option');o.value=m;o.textContent=MLAB[m]||m;sel.appendChild(o);});
+  });
 }
 
-function fillTiendas(reg){
-  var sel=document.getElementById('f-tienda');
-  sel.innerHTML='<option value="">Selecciona...</option>';
-  var ts=[...new Set(D.filter(function(r){return !reg||r.CR_REGION===reg;}).map(function(r){return r.CR_TIENDA;}))].sort();
-  ts.forEach(function(t){var o=document.createElement('option');o.value=t;o.textContent=t+' - '+getNombre(t);sel.appendChild(o);});
-}
-
-function filterTiendas(){fillTiendas(document.getElementById('f-t-reg').value);renderTienda();renderTiendasTabla();}
 function showTab(name,el){
   document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
   document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
@@ -331,9 +404,35 @@ function aggBy(field){
   return Object.values(map);
 }
 
-function getRegNombreByCode(crReg){
-  var key=Object.keys(CAT).find(function(k){return CAT[k].r===crReg;});
-  return key?CAT[key].rn:crReg;
+function parseCat(txt){
+  var lines=txt.trim().split('\n');
+  var cat={};
+  lines.slice(1).forEach(function(l){
+    var p=l.split(',');
+    var cr_t=(p[2]||'').trim().toUpperCase();
+    if(cr_t)cat[cr_t]={n:(p[3]||'').trim(),rn:(p[1]||'').trim(),r:(p[0]||'').trim().toUpperCase()};
+  });
+  return cat;
+}
+
+function parseCSV(txt){
+  var lines=txt.trim().split('\n');
+  var s=0;
+  if(isNaN(parseFloat(lines[0].split(',')[4])))s=1;
+  return lines.slice(s).map(function(l){
+    var p=l.split(',');
+    return{CR_REGION:(p[0]||'').trim().toUpperCase(),CR_TIENDA:(p[1]||'').trim().toUpperCase(),FECHA:(p[2]||'').trim(),HORA:parseInt((p[3]||'00').trim().split(':')[0]),EF:parseFloat(p[4])||0,TJ:parseFloat(p[5])||0,TOT:parseFloat(p[6])||0};
+  }).filter(function(r){return r.CR_TIENDA&&r.FECHA;});
+}
+
+function loadData(data){
+  D=data;
+  document.getElementById('loading-screen').classList.add('hidden');
+  document.getElementById('upzone').style.display='none';
+  var fechas=D.map(function(r){return r.FECHA;}).sort();
+  document.getElementById('lbl').textContent='Datos al '+fechas[fechas.length-1];
+  fillRegOpts();fillTiendasOpts();fillMeses();
+  renderGen();renderReg();renderTiendasTabla();renderTend();renderRanking();renderInact();
 }
 
 function renderGen(){
@@ -353,7 +452,7 @@ function renderGen(){
   document.getElementById('k-ticket').textContent=fmt(tot/txns);
   document.getElementById('k-txns').textContent=txns.toLocaleString();document.getElementById('k-tiendas').textContent=allT+' tiendas con venta';
   document.getElementById('k-act').textContent=act.size+' / '+TOTAL_HAB;
-  document.getElementById('k-inact').textContent=(TOTAL_HAB-act.size)+' sin venta en 7 dias';
+  document.getElementById('k-inact').textContent=(TOTAL_HAB-act.size)+' sin venta en 7 días';
   var pm={};D.forEach(function(r){var m=r.FECHA.slice(0,7);if(!pm[m])pm[m]={ef:0,tj:0};pm[m].ef+=r.EF;pm[m].tj+=r.TJ;});
   var mk=Object.keys(pm).sort();
   dch('mensual');
@@ -365,12 +464,13 @@ function renderGen(){
   dch('hora');
   CH['hora']=new Chart(document.getElementById('ch-hora'),{type:'bar',data:{labels:Array.from({length:24},function(_,i){return i+'h';}),datasets:[{data:ph.map(function(v){return Math.round(v);}),backgroundColor:ph.map(function(v){return v===mx?'#E2001A':'#F5A800';}),borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{ticks:{callback:function(v){return fmtK(v);},font:{size:10}},grid:{color:'#f0f0f0'}}}}});
   var rd=aggBy('CR_REGION').sort(function(a,b){return b.TOT-a.TOT;});
-  document.getElementById('tb-reg-gen').innerHTML=rd.map(function(r){return'<tr><td>'+cod(r.key)+'</td><td>'+getRegNombreByCode(r.key)+'</td><td>'+r.txns.toLocaleString()+'</td><td>'+fmtK(r.EF)+'</td><td>'+fmtK(r.TJ)+'</td><td class="tdr">'+fmtK(r.TOT)+'</td><td><div style="display:flex;align-items:center;gap:6px;"><div class="prog-wrap" style="flex:1;"><div class="prog-bar" style="width:'+pct(r.TOT,tot)+'"></div></div><span style="font-size:11px;color:#6B6B6B;min-width:36px;">'+pct(r.TOT,tot)+'</span></div></td></tr>';}).join('');
+  document.getElementById('tb-reg-gen').innerHTML=rd.map(function(r){return'<tr><td>'+cod(r.key)+'</td><td>'+getRegNombre(r.key)+'</td><td>'+r.txns.toLocaleString()+'</td><td>'+fmtK(r.EF)+'</td><td>'+fmtK(r.TJ)+'</td><td class="tdr">'+fmtK(r.TOT)+'</td><td><div style="display:flex;align-items:center;gap:6px;"><div class="prog-wrap" style="flex:1;"><div class="prog-bar" style="width:'+pct(r.TOT,tot)+'"></div></div><span style="font-size:11px;color:#6B6B6B;min-width:36px;">'+pct(r.TOT,tot)+'</span></div></td></tr>';}).join('');
 }
 
 function renderReg(){
-  var reg=document.getElementById('f-reg').value;
-  var fd=reg?D.filter(function(r){return r.CR_REGION===reg;}):D;
+  var reg=SEL['reg'];
+  var mes=document.getElementById('f-reg-mes').value;
+  var fd=D.filter(function(r){return(!reg||r.CR_REGION===reg)&&(!mes||r.FECHA.slice(0,7)===mes);});
   var tot=fd.reduce(function(s,r){return s+r.TOT;},0);
   var ef=fd.reduce(function(s,r){return s+r.EF;},0);
   var tj=fd.reduce(function(s,r){return s+r.TJ;},0);
@@ -385,15 +485,15 @@ function renderReg(){
 }
 
 function renderTiendasTabla(){
-  var reg=document.getElementById('f-t-reg').value;
+  var reg=SEL['t-reg'];
   var fd=reg?D.filter(function(r){return r.CR_REGION===reg;}):D;
   var m={};fd.forEach(function(r){var k=r.CR_REGION+'|'+r.CR_TIENDA;if(!m[k])m[k]={reg:r.CR_REGION,tienda:r.CR_TIENDA,TOT:0,EF:0,TJ:0,txns:0};m[k].TOT+=r.TOT;m[k].EF+=r.EF;m[k].TJ+=r.TJ;m[k].txns++;});
   var rows=Object.values(m).sort(function(a,b){return b.TOT-a.TOT;});
-  document.getElementById('tb-tiendas').innerHTML=rows.map(function(t){return'<tr><td>'+cod(t.reg)+'</td><td>'+getRegNombreByCode(t.reg)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td>'+fmt(t.TOT/t.txns)+'</td></tr>';}).join('');
+  document.getElementById('tb-tiendas').innerHTML=rows.map(function(t){return'<tr><td>'+cod(t.reg)+'</td><td>'+getRegNombre(t.reg)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td>'+fmt(t.TOT/t.txns)+'</td></tr>';}).join('');
 }
 
 function renderTienda(){
-  var t=document.getElementById('f-tienda').value;
+  var t=SEL['tienda'];
   var mes=document.getElementById('f-t-mes').value;
   document.getElementById('kpi-tienda').innerHTML='';
   document.getElementById('card-t-chart').style.display='none';
@@ -405,7 +505,7 @@ function renderTienda(){
   var tj=fd.reduce(function(s,r){return s+r.TJ;},0);
   var txns=fd.length;
   var reg=fd[0]?fd[0].CR_REGION:'';
-  document.getElementById('kpi-tienda').innerHTML='<div class="kpi-card ar"><div class="kpi-label">Tienda</div><div class="kpi-value" style="font-size:14px;margin-top:4px;">'+getNombre(t)+'</div><div class="kpi-sub">'+cod(t)+' &nbsp;|&nbsp; '+cod(reg)+' &nbsp;|&nbsp; '+getRegNombreByCode(reg)+'</div></div><div class="kpi-card ar"><div class="kpi-label">Venta total</div><div class="kpi-value">'+fmtK(tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Tarjeta</div><div class="kpi-value">'+fmtK(tj)+'</div><div class="kpi-sub">'+pct(tj,tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Efectivo</div><div class="kpi-value">'+fmtK(ef)+'</div><div class="kpi-sub">'+pct(ef,tot)+'</div></div><div class="kpi-card ag"><div class="kpi-label">Transacciones</div><div class="kpi-value">'+txns.toLocaleString()+'</div></div><div class="kpi-card ar"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">'+fmt(tot/txns)+'</div></div>';
+  document.getElementById('kpi-tienda').innerHTML='<div class="kpi-card ar"><div class="kpi-label">Tienda</div><div class="kpi-value" style="font-size:14px;margin-top:4px;">'+getNombre(t)+'</div><div class="kpi-sub">'+cod(t)+' &nbsp;|&nbsp; '+cod(reg)+' &nbsp;|&nbsp; '+getRegNombre(reg)+'</div></div><div class="kpi-card ar"><div class="kpi-label">Venta total</div><div class="kpi-value">'+fmtK(tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Tarjeta</div><div class="kpi-value">'+fmtK(tj)+'</div><div class="kpi-sub">'+pct(tj,tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Efectivo</div><div class="kpi-value">'+fmtK(ef)+'</div><div class="kpi-sub">'+pct(ef,tot)+'</div></div><div class="kpi-card ag"><div class="kpi-label">Transacciones</div><div class="kpi-value">'+txns.toLocaleString()+'</div></div><div class="kpi-card ar"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">'+fmt(tot/txns)+'</div></div>';
   var pf={};fd.forEach(function(r){if(!pf[r.FECHA])pf[r.FECHA]={TOT:0,EF:0,TJ:0,txns:0};pf[r.FECHA].TOT+=r.TOT;pf[r.FECHA].EF+=r.EF;pf[r.FECHA].TJ+=r.TJ;pf[r.FECHA].txns++;});
   var fk=Object.keys(pf).sort();
   dch('t-diario');
@@ -452,7 +552,7 @@ function renderRanking(){
   var fdReg=reg?fd.filter(function(r){return r.CR_REGION===reg;}):fd;
   var tm={};fdReg.forEach(function(r){if(!tm[r.CR_TIENDA])tm[r.CR_TIENDA]={tienda:r.CR_TIENDA,reg:r.CR_REGION,TOT:0,txns:0};tm[r.CR_TIENDA].TOT+=r.TOT;tm[r.CR_TIENDA].txns++;});
   var ranking=Object.values(tm).sort(function(a,b){return a.TOT-b.TOT;});
-  document.getElementById('tb-tend-ranking').innerHTML=ranking.map(function(t,i){return'<tr><td>'+(i+1)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+cod(t.reg)+'</td><td>'+getRegNombreByCode(t.reg)+'</td><td>'+t.txns.toLocaleString()+'</td><td class="tdr">'+fmtK(t.TOT)+'</td></tr>';}).join('');
+  document.getElementById('tb-tend-ranking').innerHTML=ranking.map(function(t,i){return'<tr><td>'+(i+1)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+cod(t.reg)+'</td><td>'+getRegNombre(t.reg)+'</td><td>'+t.txns.toLocaleString()+'</td><td class="tdr">'+fmtK(t.TOT)+'</td></tr>';}).join('');
 }
 
 function renderInact(){
@@ -467,27 +567,23 @@ function renderInact(){
   document.getElementById('ki-act').textContent=todas.filter(function(t){return t.fecha>=s7;}).length;
   document.getElementById('ki-30').textContent=todas.filter(function(t){return t.fecha<s7&&t.fecha>=s30;}).length;
   document.getElementById('ki-m30').textContent=todas.filter(function(t){return t.fecha<s30;}).length;
-  var rf=document.getElementById('f-i-reg').value;
+  var rf=SEL['i-reg'];
   var df=parseInt(document.getElementById('f-i-dias').value)||7;
   var cx=new Date(ult);cx.setDate(cx.getDate()-(df-1));var sx=cx.toISOString().slice(0,10);
   var inact=todas.filter(function(t){return t.fecha<sx&&(!rf||t.region===rf);}).map(function(t){return Object.assign({},t,{dias:Math.floor((new Date(ult)-new Date(t.fecha))/(86400000))});}).sort(function(a,b){return b.dias-a.dias;});
-  document.getElementById('tb-inact').innerHTML=inact.map(function(t){var b=t.dias>30?'<span class="badge badge-red">+'+t.dias+' dias</span>':'<span class="badge badge-yellow">'+t.dias+' dias</span>';var d=t.dias>30?'dot-r':'dot-y';return'<tr><td>'+cod(t.region)+'</td><td>'+getRegNombreByCode(t.region)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.fecha+'</td><td class="tdc">'+b+'</td><td><span class="dot '+d+'"></span>'+(t.dias>30?'Atencion urgente':'Sin venta reciente')+'</td></tr>';}).join('');
+  document.getElementById('tb-inact').innerHTML=inact.map(function(t){var b=t.dias>30?'<span class="badge badge-red">+'+t.dias+' días</span>':'<span class="badge badge-yellow">'+t.dias+' días</span>';var d=t.dias>30?'dot-r':'dot-y';return'<tr><td>'+cod(t.region)+'</td><td>'+getRegNombre(t.region)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.fecha+'</td><td class="tdc">'+b+'</td><td><span class="dot '+d+'"></span>'+(t.dias>30?'Atención urgente':'Sin venta reciente')+'</td></tr>';}).join('');
 }
 
 async function autoLoad(){
   try{
-    document.getElementById('loading-msg').textContent='Cargando catalogo de tiendas...';
+    document.getElementById('loading-msg').textContent='Cargando catálogo de tiendas...';
     var r1=await fetch(CAT_URL+'?t='+Date.now());
     if(!r1.ok)throw new Error('cat');
-    var catTxt=await r1.text();
-    var parsed=parseCat(catTxt);
-    CAT=parsed.cat;
-
+    CAT=parseCat(await r1.text());
     document.getElementById('loading-msg').textContent='Cargando datos de ventas...';
     var r2=await fetch(CSV_URL+'?t='+Date.now());
     if(!r2.ok)throw new Error('csv');
-    var csvTxt=await r2.text();
-    loadData(parseCSV(csvTxt));
+    loadData(parseCSV(await r2.text()));
   }catch(e){
     document.getElementById('loading-screen').classList.add('hidden');
     document.getElementById('upzone').style.display='block';
@@ -497,9 +593,7 @@ async function autoLoad(){
 
 document.getElementById('file-input').addEventListener('change',function(e){
   var f=e.target.files[0];if(!f)return;
-  var r=new FileReader();
-  r.onload=function(ev){loadData(parseCSV(ev.target.result));};
-  r.readAsText(f);
+  var r=new FileReader();r.onload=function(ev){loadData(parseCSV(ev.target.result));};r.readAsText(f);
 });
 window.addEventListener('load',function(){document.getElementById('lu').focus();});
 </script>
