@@ -226,7 +226,7 @@ tr:hover td{background:var(--gray);}
 var D=[];
 var CH={};
 var CAT={};
-var TOTAL_HAB=0;
+var TOTAL_HAB=443; // Tiendas habilitadas en POS Movil
 var DIAS=['Lun','Mar','Mie','Jue','Vie','Sab','Dom'];
 var MLAB={'2025-01':'Ene 25','2025-02':'Feb 25','2025-03':'Mar 25','2025-04':'Abr 25','2025-05':'May 25','2025-06':'Jun 25','2025-07':'Jul 25','2025-08':'Ago 25','2025-09':'Sep 25','2025-10':'Oct 25','2025-11':'Nov 25','2025-12':'Dic 25','2026-01':'Ene','2026-02':'Feb','2026-03':'Mar','2026-04':'Abr','2026-05':'May','2026-06':'Jun','2026-07':'Jul','2026-08':'Ago','2026-09':'Sep','2026-10':'Oct','2026-11':'Nov','2026-12':'Dic'};
 var BASE='https://raw.githubusercontent.com/Alanpec25/Pos-Movil-Dashboard/main/';
@@ -482,7 +482,6 @@ async function autoLoad(){
     var catTxt=await r1.text();
     var parsed=parseCat(catTxt);
     CAT=parsed.cat;
-    TOTAL_HAB=parsed.total;
 
     document.getElementById('loading-msg').textContent='Cargando datos de ventas...';
     var r2=await fetch(CSV_URL+'?t='+Date.now());
