@@ -378,7 +378,9 @@ function renderGen(){
     var hoy=new Date();
     var mesHoy=hoy.getFullYear()+'-'+(hoy.getMonth()<9?'0':'')+(hoy.getMonth()+1);
     if(mes===mesHoy){
-      fechaFin=hoy.toISOString().slice(0,10);
+      // Dashboard con desfase de 1 día — mostrar hasta ayer
+      var ayer=new Date(hoy);ayer.setDate(ayer.getDate()-1);
+      fechaFin=ayer.toISOString().slice(0,10);
     } else {
       var y=parseInt(mes.slice(0,4)), m=parseInt(mes.slice(5,7));
       var lastDay=new Date(y, m, 0).getDate();
