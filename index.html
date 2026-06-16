@@ -138,10 +138,7 @@ tr:hover td{background:var(--gray);}
       <div class="card"><div class="card-title">Efectivo vs Tarjeta</div><div style="position:relative;height:200px;"><canvas id="ch-donut"></canvas></div></div>
       <div class="card"><div class="card-title">Actividad por hora</div><div style="position:relative;height:200px;"><canvas id="ch-hora"></canvas></div></div>
     </div>
-    <div class="card"><div class="card-title">Top Regiones</div>
-      <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>% del total</th></tr></thead>
-      <tbody id="tb-reg-gen"></tbody></table>
-    </div>
+
   </div>
 
   <!-- REGIONES -->
@@ -417,7 +414,7 @@ function renderGen(){
   var ph=Array(24).fill(0);GD.forEach(function(r){if(r.HORA>=0&&r.HORA<24)ph[r.HORA]+=r.TOT;});
   var mx=Math.max.apply(null,ph);
   dch('hora');
-  CH['hora']=new Chart(document.getElementById('ch-hora'),{type:'bar',data:{labels:Array.from({length:24},function(_,i){return i+'h';}),datasets:[{data:ph.map(function(v){return Math.round(v);}),backgroundColor:'#C8C8C8',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{ticks:{callback:function(v){return fmtK(v);},font:{size:10}},grid:{color:'#f0f0f0'}}}}});
+  CH['hora']=new Chart(document.getElementById('ch-hora'),{type:'bar',data:{labels:Array.from({length:24},function(_,i){return i+'h';}),datasets:[{data:ph.map(function(v){return Math.round(v);}),backgroundColor:'#2E7D32',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{ticks:{callback:function(v){return fmtK(v);},font:{size:10}},grid:{color:'#f0f0f0'}}}}});
   var rd=(function(){var map={};GD.forEach(function(r){var k=r.CR_REGION;if(!map[k])map[k]={key:k,TOT:0,EF:0,TJ:0,txns:0};map[k].TOT+=r.TOT;map[k].EF+=r.EF;map[k].TJ+=r.TJ;map[k].txns++;});return Object.values(map);})().sort(function(a,b){return b.TOT-a.TOT;});
   document.getElementById('tb-reg-gen').innerHTML=rd.map(function(r){return'<tr><td>'+cod(r.key)+'</td><td>'+getRegNombre(r.key)+'</td><td>'+r.txns.toLocaleString()+'</td><td>'+fmtK(r.EF)+'</td><td>'+fmtK(r.TJ)+'</td><td class="tdr">'+fmtK(r.TOT)+'</td><td><div style="display:flex;align-items:center;gap:6px;"><div class="prog-wrap" style="flex:1;"><div class="prog-bar" style="width:'+pct(r.TOT,tot)+'"></div></div><span style="font-size:11px;color:#6B6B6B;min-width:36px;">'+pct(r.TOT,tot)+'</span></div></td></tr>';}).join('');
 }
