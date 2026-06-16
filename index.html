@@ -553,14 +553,12 @@ function downloadTable(tableId, filename){
     var cols=row.querySelectorAll('th,td');
     var rowData=[];
     cols.forEach(function(col){
-      var text=col.innerText.replace(/,/g,' ').replace(/
-/g,' ').trim();
+      var text=(col.innerText||col.textContent||'').replace(/,/g,' ').replace(/[\r\n]+/g,' ').trim();
       rowData.push('"'+text+'"');
     });
     csv.push(rowData.join(','));
   });
-  var blob=new Blob(['﻿'+csv.join('
-')],{type:'text/csv;charset=utf-8;'});
+  var blob=new Blob(['\uFEFF'+csv.join('\n')],{type:'text/csv;charset=utf-8;'});
   var link=document.createElement('a');
   link.href=URL.createObjectURL(blob);
   link.download=filename+'_'+new Date().toISOString().slice(0,10)+'.csv';
