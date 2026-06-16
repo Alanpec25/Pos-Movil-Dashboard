@@ -369,12 +369,31 @@ function renderGen(){
   var tj=GD.reduce(function(s,r){return s+r.TJ;},0);
   var txns=GD.length;
   var fechas=GD.map(function(r){return r.FECHA;}).sort();
-  var ult=fechas[fechas.length-1];
+  // Fecha inicio y fin para el KPI de período
+  var mes=document.getElementById('f-gen-mes')?document.getElementById('f-gen-mes').value:'';
+  var fechaIni, fechaFin;
+  if(mes){
+    fechaIni=mes+'-01';
+    // Si es el mes en curso usar hoy, si es mes pasado usar último día del mes
+    var hoy=new Date();
+    var mesHoy=hoy.getFullYear()+'-'+(hoy.getMonth()<9?'0':'')+(hoy.getMonth()+1);
+    if(mes===mesHoy){
+      fechaFin=hoy.toISOString().slice(0,10);
+    } else {
+      var y=parseInt(mes.slice(0,4)), m=parseInt(mes.slice(5,7));
+      var lastDay=new Date(y, m, 0).getDate();
+      fechaFin=mes+'-'+(lastDay<10?'0':'')+lastDay;
+    }
+  } else {
+    fechaIni='2026-01-01';
+    fechaFin=fechas.length>0?fechas[fechas.length-1]:'';
+  }
+  var ult=fechas.length>0?fechas[fechas.length-1]:fechaFin;
   var c=new Date(ult);c.setDate(c.getDate()-6);var cs=c.toISOString().slice(0,10);
   var act=new Set(GD.filter(function(r){return r.FECHA>=cs;}).map(function(r){return r.CR_TIENDA;}));
   var allT=new Set(GD.map(function(r){return r.CR_TIENDA;})).size;
   document.getElementById('k-total').textContent=fmtK(tot);
-  document.getElementById('k-periodo').textContent=fechas[0]+' - '+ult;
+  document.getElementById('k-periodo').textContent=fechaIni+' - '+fechaFin;
   document.getElementById('k-tj').textContent=fmtK(tj);document.getElementById('k-tj-p').textContent=pct(tj,tot)+' del total';
   document.getElementById('k-ef').textContent=fmtK(ef);document.getElementById('k-ef-p').textContent=pct(ef,tot)+' del total';
   document.getElementById('k-ticket').textContent=fmt(tot/txns);
