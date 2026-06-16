@@ -153,9 +153,14 @@ tr:hover td{background:var(--gray);}
       <select id="f-reg-mes" onchange="renderReg()"><option value="">Todos los meses</option></select>
     </div>
     <div class="kpi-grid" id="kpi-reg"></div>
-    <div class="card"><div class="card-title">Venta por Región / Tienda</div><div style="position:relative;height:260px;"><canvas id="ch-reg"></canvas></div></div>
-    <div class="card"><div class="card-title">Detalle de Tiendas</div>
-      <table><thead><tr><th>CR Tienda</th><th>Nombre Tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>Ticket prom.</th></tr></thead>
+    <div class="card" id="card-reg-tabla">
+      <div class="card-title" id="lbl-reg-tabla">Top Regiones</div>
+      <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>% del total</th></tr></thead>
+      <tbody id="tb-reg-resumen"></tbody></table>
+    </div>
+    <div class="card" id="card-reg-tiendas" style="display:none;">
+      <div class="card-title" id="lbl-reg-tiendas">Top Tiendas de la Región</div>
+      <table><thead><tr><th>CR Tienda</th><th>Nombre Tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>% de la región</th></tr></thead>
       <tbody id="tb-reg-tiendas"></tbody></table>
     </div>
   </div>
@@ -425,12 +430,36 @@ function renderReg(){
   var ef=fd.reduce(function(s,r){return s+r.EF;},0);
   var tj=fd.reduce(function(s,r){return s+r.TJ;},0);
   var txns=fd.length;
-  document.getElementById('kpi-reg').innerHTML='<div class="kpi-card ar"><div class="kpi-label">Venta total</div><div class="kpi-value">'+fmtK(tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Tarjeta</div><div class="kpi-value">'+fmtK(tj)+'</div><div class="kpi-sub">'+pct(tj,tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Efectivo</div><div class="kpi-value">'+fmtK(ef)+'</div><div class="kpi-sub">'+pct(ef,tot)+'</div></div><div class="kpi-card ag"><div class="kpi-label">Transacciones</div><div class="kpi-value">'+txns.toLocaleString()+'</div></div><div class="kpi-card ar"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">'+(txns>0?fmt(tot/txns):'--')+'</div></div>';
-  var rd=reg?(function(){var m={};fd.forEach(function(r){if(!m[r.CR_TIENDA])m[r.CR_TIENDA]={key:r.CR_TIENDA,TOT:0,EF:0,TJ:0};m[r.CR_TIENDA].TOT+=r.TOT;m[r.CR_TIENDA].EF+=r.EF;m[r.CR_TIENDA].TJ+=r.TJ;});return Object.values(m).sort(function(a,b){return b.TOT-a.TOT;}).slice(0,15);})():aggBy('CR_REGION').sort(function(a,b){return b.TOT-a.TOT;});
-  dch('reg');
-  CH['reg']=new Chart(document.getElementById('ch-reg'),{type:'bar',data:{labels:rd.map(function(r){return reg?getNombre(r.key)+' ('+r.key+')':r.key;}),datasets:[{label:'Tarjeta',data:rd.map(function(r){return Math.round(r.TJ||0);}),backgroundColor:'#F5A800',borderRadius:4},{label:'Efectivo',data:rd.map(function(r){return Math.round(r.EF||0);}),backgroundColor:'#E2001A',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{stacked:true,ticks:{callback:function(v){return fmtK(v);},font:{size:10}},grid:{color:'#f0f0f0'}},y:{stacked:true,grid:{display:false},ticks:{font:{size:10}}}}}});
-  var tm={};fd.forEach(function(r){if(!tm[r.CR_TIENDA])tm[r.CR_TIENDA]={key:r.CR_TIENDA,TOT:0,EF:0,TJ:0,txns:0};tm[r.CR_TIENDA].TOT+=r.TOT;tm[r.CR_TIENDA].EF+=r.EF;tm[r.CR_TIENDA].TJ+=r.TJ;tm[r.CR_TIENDA].txns++;});
-  document.getElementById('tb-reg-tiendas').innerHTML=Object.values(tm).sort(function(a,b){return b.TOT-a.TOT;}).map(function(t){return'<tr><td>'+cod(t.key)+'</td><td>'+getNombre(t.key)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td>'+fmt(t.TOT/t.txns)+'</td></tr>';}).join('');
+
+  // KPIs — solo mostrar cuando hay región seleccionada
+  if(reg){
+    document.getElementById('kpi-reg').innerHTML='<div class="kpi-card ar"><div class="kpi-label">Venta total</div><div class="kpi-value">'+fmtK(tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Tarjeta</div><div class="kpi-value">'+fmtK(tj)+'</div><div class="kpi-sub">'+pct(tj,tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Efectivo</div><div class="kpi-value">'+fmtK(ef)+'</div><div class="kpi-sub">'+pct(ef,tot)+'</div></div><div class="kpi-card ag"><div class="kpi-label">Transacciones</div><div class="kpi-value">'+txns.toLocaleString()+'</div></div><div class="kpi-card ar"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">'+(txns>0?fmt(tot/txns):'--')+'</div></div>';
+    document.getElementById('kpi-reg').style.display='grid';
+  } else {
+    document.getElementById('kpi-reg').innerHTML='';
+    document.getElementById('kpi-reg').style.display='none';
+  }
+
+  if(!reg){
+    // Vista general — Top Regiones con barra de progreso
+    document.getElementById('card-reg-tiendas').style.display='none';
+    document.getElementById('card-reg-tabla').style.display='block';
+    document.getElementById('lbl-reg-tabla').textContent='Top Regiones';
+    var allTot=D.filter(function(r){return !mes||r.FECHA.slice(0,7)===mes;}).reduce(function(s,r){return s+r.TOT;},0);
+    var rd=aggBy('CR_REGION');
+    // Recalcular con filtro de mes si aplica
+    if(mes){var fdM=D.filter(function(r){return r.FECHA.slice(0,7)===mes;});var rdM={};fdM.forEach(function(r){if(!rdM[r.CR_REGION])rdM[r.CR_REGION]={key:r.CR_REGION,TOT:0,EF:0,TJ:0,txns:0};rdM[r.CR_REGION].TOT+=r.TOT;rdM[r.CR_REGION].EF+=r.EF;rdM[r.CR_REGION].TJ+=r.TJ;rdM[r.CR_REGION].txns++;});rd=Object.values(rdM);}
+    rd.sort(function(a,b){return b.TOT-a.TOT;});
+    document.getElementById('tb-reg-resumen').innerHTML=rd.map(function(r){return'<tr><td>'+cod(r.key)+'</td><td>'+getRegNombre(r.key)+'</td><td>'+r.txns.toLocaleString()+'</td><td>'+fmtK(r.EF)+'</td><td>'+fmtK(r.TJ)+'</td><td class="tdr">'+fmtK(r.TOT)+'</td><td><div style="display:flex;align-items:center;gap:6px;"><div class="prog-wrap" style="flex:1;"><div class="prog-bar" style="width:'+pct(r.TOT,allTot)+'"></div></div><span style="font-size:11px;color:#6B6B6B;min-width:36px;">'+pct(r.TOT,allTot)+'</span></div></td></tr>';}).join('');
+  } else {
+    // Vista detalle región — Top Tiendas con barra de progreso
+    document.getElementById('card-reg-tabla').style.display='none';
+    document.getElementById('card-reg-tiendas').style.display='block';
+    document.getElementById('lbl-reg-tiendas').textContent='Top Tiendas — '+reg+' '+getRegNombre(reg);
+    var tm={};fd.forEach(function(r){if(!tm[r.CR_TIENDA])tm[r.CR_TIENDA]={key:r.CR_TIENDA,TOT:0,EF:0,TJ:0,txns:0};tm[r.CR_TIENDA].TOT+=r.TOT;tm[r.CR_TIENDA].EF+=r.EF;tm[r.CR_TIENDA].TJ+=r.TJ;tm[r.CR_TIENDA].txns++;});
+    var ts=Object.values(tm).sort(function(a,b){return b.TOT-a.TOT;});
+    document.getElementById('tb-reg-tiendas').innerHTML=ts.map(function(t){return'<tr><td>'+cod(t.key)+'</td><td>'+getNombre(t.key)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td><div style="display:flex;align-items:center;gap:6px;"><div class="prog-wrap" style="flex:1;"><div class="prog-bar" style="width:'+pct(t.TOT,tot)+'"></div></div><span style="font-size:11px;color:#6B6B6B;min-width:36px;">'+pct(t.TOT,tot)+'</span></div></td></tr>';}).join('');
+  }
 }
 
 function renderTiendasTabla(){
