@@ -12,8 +12,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 #login-screen{position:fixed;inset:0;background:#1A1A1A;display:flex;align-items:center;justify-content:center;z-index:9999;}
 #login-screen.hidden{display:none;}
 .login-box{background:#fff;border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:360px;text-align:center;}
-
-.login-logo{margin-bottom:1.5rem;display:flex;justify-content:center;}.login-logo img{height:80px;object-fit:contain;}
 .login-subtitle{font-size:13px;color:var(--mid);margin-bottom:1.75rem;}
 .login-field{margin-bottom:1rem;text-align:left;}
 .login-field label{font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:6px;}
@@ -24,13 +22,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-error{font-size:12px;color:var(--red);margin-top:10px;min-height:18px;}
 #loading-screen{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:8888;}
 #loading-screen.hidden{display:none;}
-
-
 .loading-msg{font-size:13px;color:var(--mid);margin-top:1rem;}
 .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .header{background:var(--red);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;}
-
 .header-title{color:#fff;font-size:14px;font-weight:500;margin-left:12px;}
 .header-right{display:flex;align-items:center;gap:16px;}
 .last-update{font-size:12px;color:rgba(255,255,255,.7);}
@@ -39,8 +34,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tab{padding:14px 20px;font-size:13px;font-weight:500;color:var(--mid);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;}
 .tab.active{color:var(--red);border-bottom-color:var(--red);}
 .content{max-width:1200px;margin:0 auto;padding:1.5rem 2rem;}
-.panel{display:none;}
-.panel.active{display:block;}
+.panel{display:none;}.panel.active{display:block;}
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:1.5rem;}
 .kpi-card{background:#fff;border-radius:10px;border:1px solid var(--border);padding:1rem 1.25rem;}
 .kpi-card.ar{border-top:3px solid var(--red);}
@@ -70,19 +64,7 @@ tr:hover td{background:var(--gray);}
 .dot-r{background:var(--red);}
 .filter-bar{display:flex;gap:10px;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;}
 .filter-bar label{font-size:12px;color:var(--mid);font-weight:500;}
-.filter-bar select,.filter-bar input[type=date]{font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);cursor:pointer;}
-
-/* SEARCHABLE SELECT */
-
-
-
-
-
-
-
-
-
-
+.filter-bar select,.filter-bar input[type=date]{font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);cursor:pointer;min-width:180px;}
 .upload-zone{border:2px dashed var(--border);border-radius:10px;padding:1.5rem;text-align:center;margin-bottom:1.5rem;background:#fff;cursor:pointer;}
 #file-input{display:none;}
 .cod{font-family:monospace;font-size:12px;background:var(--gray);padding:1px 5px;border-radius:3px;color:var(--mid);}
@@ -93,7 +75,9 @@ tr:hover td{background:var(--gray);}
 
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo"><img src="https://raw.githubusercontent.com/Alanpec25/Pos-Movil-Dashboard/main/oxxo_logo.png" alt="OXXO"></div>
+    <div style="margin-bottom:1.5rem;display:flex;justify-content:center;">
+      <img src="https://raw.githubusercontent.com/Alanpec25/Pos-Movil-Dashboard/main/oxxo_logo.png" alt="OXXO" style="height:80px;object-fit:contain;">
+    </div>
     <p class="login-subtitle">POS Movil &mdash; Dashboard de Ventas</p>
     <div class="login-field"><label>Usuario</label><input type="text" id="lu" placeholder="Usuario"></div>
     <div class="login-field"><label>Contrasena</label><input type="password" id="lp" placeholder="Contrasena" onkeydown="if(event.key==='Enter')doLogin()"></div>
@@ -150,7 +134,7 @@ tr:hover td{background:var(--gray);}
       <div class="card"><div class="card-title">Efectivo vs Tarjeta</div><div style="position:relative;height:200px;"><canvas id="ch-donut"></canvas></div></div>
       <div class="card"><div class="card-title">Actividad por hora</div><div style="position:relative;height:200px;"><canvas id="ch-hora"></canvas></div></div>
     </div>
-    <div class="card"><div class="card-title">Top regiones</div>
+    <div class="card"><div class="card-title">Top Regiones</div>
       <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>% del total</th></tr></thead>
       <tbody id="tb-reg-gen"></tbody></table>
     </div>
@@ -160,7 +144,7 @@ tr:hover td{background:var(--gray);}
   <div class="panel" id="panel-regiones">
     <div class="filter-bar">
       <label>Región</label>
-      <select id="f-reg" onchange="onRegChange()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);min-width:200px;"><option value="">Todas las regiones</option></select>
+      <select id="f-reg" onchange="renderReg()"><option value="">Todas las regiones</option></select>
       <label>Mes</label>
       <select id="f-reg-mes" onchange="renderReg()"><option value="">Todos los meses</option></select>
     </div>
@@ -176,9 +160,9 @@ tr:hover td{background:var(--gray);}
   <div class="panel" id="panel-tiendas">
     <div class="filter-bar">
       <label>Región</label>
-      <select id="f-t-reg" onchange="filterTiendas()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);min-width:200px;"><option value="">Todas las regiones</option></select>
+      <select id="f-t-reg" onchange="onTRegChange()"><option value="">Todas las regiones</option></select>
       <label>Tienda</label>
-      <select id="f-tienda" onchange="renderTienda()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);min-width:220px;"><option value="">Selecciona una tienda</option></select>
+      <select id="f-tienda" onchange="renderTienda()"><option value="">Selecciona una tienda</option></select>
       <label>Mes</label>
       <select id="f-t-mes" onchange="renderTienda()"><option value="">Todos los meses</option></select>
     </div>
@@ -212,7 +196,8 @@ tr:hover td{background:var(--gray);}
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px;">
         <span class="card-title" style="margin-bottom:0;">Ranking Tiendas — menor a mayor venta</span>
         <div class="filter-bar" style="margin-bottom:0;">
-          <label>Región</label><select id="f-tend-reg" onchange="renderRanking()"><option value="">Todas</option></select>
+          <label>Región</label>
+          <select id="f-tend-reg" onchange="renderRanking()" style="min-width:160px;"><option value="">Todas</option></select>
         </div>
       </div>
       <table><thead><tr><th>Pos.</th><th>CR Tienda</th><th>Nombre Tienda</th><th>CR Región</th><th>Nombre Región</th><th>Txns</th><th class="tdr">Total</th></tr></thead>
@@ -223,14 +208,14 @@ tr:hover td{background:var(--gray);}
   <!-- INACTIVAS -->
   <div class="panel" id="panel-inactivas">
     <div class="kpi-grid">
-      <div class="kpi-card ar"><div class="kpi-label">Total POS Móvil habilitadas</div><div class="kpi-value" id="ki-hab">443</div><div class="kpi-sub">tiendas habilitadas</div></div>
+      <div class="kpi-card ar"><div class="kpi-label">Total POS Móvil habilitadas</div><div class="kpi-value">443</div><div class="kpi-sub">tiendas habilitadas</div></div>
       <div class="kpi-card ag"><div class="kpi-label"><span class="dot dot-g"></span>Activas (7 días)</div><div class="kpi-value" id="ki-act">-</div><div class="kpi-sub">con al menos 1 venta</div></div>
       <div class="kpi-card ay"><div class="kpi-label"><span class="dot dot-y"></span>Inactivas (7-30 días)</div><div class="kpi-value" id="ki-30">-</div><div class="kpi-sub">sin venta reciente</div></div>
       <div class="kpi-card ar"><div class="kpi-label"><span class="dot dot-r"></span>Inactivas (+30 días)</div><div class="kpi-value" id="ki-m30">-</div><div class="kpi-sub">atención urgente</div></div>
     </div>
     <div class="filter-bar">
       <label>Región</label>
-      <select id="f-i-reg" onchange="renderInact()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);min-width:200px;"><option value="">Todas las regiones</option></select>
+      <select id="f-i-reg" onchange="renderInact()"><option value="">Todas las regiones</option></select>
       <label>Antigüedad</label>
       <select id="f-i-dias" onchange="renderInact()">
         <option value="7">Más de 7 días</option>
@@ -261,12 +246,6 @@ var BASE='https://raw.githubusercontent.com/Alanpec25/Pos-Movil-Dashboard/main/'
 var CSV_URL=BASE+'PM_Ventas_Dash_AI.csv';
 var CAT_URL=BASE+'tiendas.csv';
 
-// Valores seleccionados de los buscadores
-
-
-// Opciones disponibles por buscador
-
-
 function getNombre(cr){return CAT[cr]?CAT[cr].n:'-';}
 function getRegNombre(crReg){
   var key=Object.keys(CAT).find(function(k){return CAT[k].r===crReg;});
@@ -290,85 +269,6 @@ function fmtK(n){return n>=1000000?'$'+(n/1000000).toFixed(2)+'M':n>=1000?'$'+(n
 function pct(a,b){return b>0?(a/b*100).toFixed(1)+'%':'0%';}
 function dch(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
 function cod(s){return '<span class="cod">'+s+'</span>';}
-
-// ---- FILTROS ----
-
-function onRegChange(){
-  SEL['reg'] = document.getElementById('f-reg').value;
-  renderReg();
-}
-
-function filterTiendas(){
-  var reg = document.getElementById('f-t-reg').value;
-  SEL['t-reg'] = reg;
-  fillTiendasSelect(reg);
-  SEL['tienda'] = '';
-  renderTienda();
-  renderTiendasTabla();
-}
-
-function fillTiendasSelect(reg){
-  var sel = document.getElementById('f-tienda');
-  sel.innerHTML = '<option value="">Selecciona una tienda</option>';
-  var ts = [...new Set(D.filter(function(r){return !reg||r.CR_REGION===reg;}).map(function(r){return r.CR_TIENDA;}))].sort();
-  ts.forEach(function(t){
-    var o = document.createElement('option');
-    o.value = t;
-    o.textContent = t + ' - ' + getNombre(t);
-    sel.appendChild(o);
-  });
-}
-
-function fillRegOpts(){
-  var regs=[...new Set(D.map(function(r){return r.CR_REGION;}))].sort();
-  ['f-reg','f-t-reg','f-i-reg','f-tend-reg'].forEach(function(id){
-    var sel=document.getElementById(id);
-    if(!sel)return;
-    var first=sel.options[0];
-    sel.innerHTML='';
-    sel.appendChild(first);
-    regs.forEach(function(r){
-      var o=document.createElement('option');
-      o.value=r;
-      o.textContent=r+' - '+getRegNombre(r);
-      sel.appendChild(o);
-    });
-  });
-  fillTiendasSelect('');
-}
-
-function fillTiendasOpts(){
-  var reg=SEL['t-reg'];
-  var ts=[...new Set(D.filter(function(r){return !reg||r.CR_REGION===reg;}).map(function(r){return r.CR_TIENDA;}))]
-    .sort()
-    .map(function(t){return{value:t,label:t+' - '+getNombre(t)};});
-  buildDropdown('tienda',ts);
-  SEL['tienda']='';
-  document.getElementById('s-tienda-input').value='';
-}
-
-function filterTiendas(){fillTiendasOpts();renderTiendasTabla();}
-
-function fillMeses(){
-  var meses=[...new Set(D.map(function(r){return r.FECHA.slice(0,7);}))].sort();
-  ['f-reg-mes','f-t-mes'].forEach(function(id){
-    var sel=document.getElementById(id);
-    sel.innerHTML='<option value="">Todos los meses</option>';
-    meses.forEach(function(m){var o=document.createElement('option');o.value=m;o.textContent=MLAB[m]||m;sel.appendChild(o);});
-  });
-}
-
-function showTab(name,el){
-  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
-  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
-  el.classList.add('active');document.getElementById('panel-'+name).classList.add('active');
-}
-
-function aggBy(field){
-  var map={};
-  D.forEach(function(r){var k=r[field];if(!map[k])map[k]={key:k,TOT:0,EF:0,TJ:0,txns:0};map[k].TOT+=r.TOT;map[k].EF+=r.EF;map[k].TJ+=r.TJ;map[k].txns++;});
-  return Object.values(map);
-}
 
 function parseCat(txt){
   var lines=txt.trim().split('\n');
@@ -397,8 +297,64 @@ function loadData(data){
   document.getElementById('upzone').style.display='none';
   var fechas=D.map(function(r){return r.FECHA;}).sort();
   document.getElementById('lbl').textContent='Datos al '+fechas[fechas.length-1];
-  fillRegOpts();fillTiendasOpts();fillMeses();
+  fillFilters();
   renderGen();renderReg();renderTiendasTabla();renderTend();renderRanking();renderInact();
+}
+
+function fillFilters(){
+  var regs=[...new Set(D.map(function(r){return r.CR_REGION;}))].sort();
+  ['f-reg','f-t-reg','f-i-reg','f-tend-reg'].forEach(function(id){
+    var sel=document.getElementById(id);
+    if(!sel)return;
+    var first=sel.options[0];
+    sel.innerHTML='';
+    sel.appendChild(first);
+    regs.forEach(function(r){
+      var o=document.createElement('option');
+      o.value=r;
+      o.textContent=r+' - '+getRegNombre(r);
+      sel.appendChild(o);
+    });
+  });
+  var meses=[...new Set(D.map(function(r){return r.FECHA.slice(0,7);}))].sort();
+  ['f-reg-mes','f-t-mes'].forEach(function(id){
+    var sel=document.getElementById(id);
+    sel.innerHTML='<option value="">Todos los meses</option>';
+    meses.forEach(function(m){var o=document.createElement('option');o.value=m;o.textContent=MLAB[m]||m;sel.appendChild(o);});
+  });
+  fillTiendasSelect('');
+}
+
+function fillTiendasSelect(reg){
+  var sel=document.getElementById('f-tienda');
+  sel.innerHTML='<option value="">Selecciona una tienda</option>';
+  var ts=[...new Set(D.filter(function(r){return !reg||r.CR_REGION===reg;}).map(function(r){return r.CR_TIENDA;}))].sort();
+  ts.forEach(function(t){
+    var o=document.createElement('option');
+    o.value=t;
+    o.textContent=t+' - '+getNombre(t);
+    sel.appendChild(o);
+  });
+}
+
+function onTRegChange(){
+  var reg=document.getElementById('f-t-reg').value;
+  fillTiendasSelect(reg);
+  renderTiendasTabla();
+  renderTienda();
+}
+
+function showTab(name,el){
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  el.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+}
+
+function aggBy(field){
+  var map={};
+  D.forEach(function(r){var k=r[field];if(!map[k])map[k]={key:k,TOT:0,EF:0,TJ:0,txns:0};map[k].TOT+=r.TOT;map[k].EF+=r.EF;map[k].TJ+=r.TJ;map[k].txns++;});
+  return Object.values(map);
 }
 
 function renderGen(){
@@ -416,7 +372,8 @@ function renderGen(){
   document.getElementById('k-tj').textContent=fmtK(tj);document.getElementById('k-tj-p').textContent=pct(tj,tot)+' del total';
   document.getElementById('k-ef').textContent=fmtK(ef);document.getElementById('k-ef-p').textContent=pct(ef,tot)+' del total';
   document.getElementById('k-ticket').textContent=fmt(tot/txns);
-  document.getElementById('k-txns').textContent=txns.toLocaleString();document.getElementById('k-tiendas').textContent=allT+' tiendas con venta';
+  document.getElementById('k-txns').textContent=txns.toLocaleString();
+  document.getElementById('k-tiendas').textContent=allT+' tiendas con venta';
   document.getElementById('k-act').textContent=act.size+' / '+TOTAL_HAB;
   document.getElementById('k-inact').textContent=(TOTAL_HAB-act.size)+' sin venta en 7 días';
   var pm={};D.forEach(function(r){var m=r.FECHA.slice(0,7);if(!pm[m])pm[m]={ef:0,tj:0};pm[m].ef+=r.EF;pm[m].tj+=r.TJ;});
@@ -446,16 +403,14 @@ function renderReg(){
   dch('reg');
   CH['reg']=new Chart(document.getElementById('ch-reg'),{type:'bar',data:{labels:rd.map(function(r){return reg?getNombre(r.key)+' ('+r.key+')':r.key;}),datasets:[{label:'Tarjeta',data:rd.map(function(r){return Math.round(r.TJ||0);}),backgroundColor:'#F5A800',borderRadius:4},{label:'Efectivo',data:rd.map(function(r){return Math.round(r.EF||0);}),backgroundColor:'#E2001A',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{stacked:true,ticks:{callback:function(v){return fmtK(v);},font:{size:10}},grid:{color:'#f0f0f0'}},y:{stacked:true,grid:{display:false},ticks:{font:{size:10}}}}}});
   var tm={};fd.forEach(function(r){if(!tm[r.CR_TIENDA])tm[r.CR_TIENDA]={key:r.CR_TIENDA,TOT:0,EF:0,TJ:0,txns:0};tm[r.CR_TIENDA].TOT+=r.TOT;tm[r.CR_TIENDA].EF+=r.EF;tm[r.CR_TIENDA].TJ+=r.TJ;tm[r.CR_TIENDA].txns++;});
-  var ts=Object.values(tm).sort(function(a,b){return b.TOT-a.TOT;});
-  document.getElementById('tb-reg-tiendas').innerHTML=ts.map(function(t){return'<tr><td>'+cod(t.key)+'</td><td>'+getNombre(t.key)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td>'+fmt(t.TOT/t.txns)+'</td></tr>';}).join('');
+  document.getElementById('tb-reg-tiendas').innerHTML=Object.values(tm).sort(function(a,b){return b.TOT-a.TOT;}).map(function(t){return'<tr><td>'+cod(t.key)+'</td><td>'+getNombre(t.key)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td>'+fmt(t.TOT/t.txns)+'</td></tr>';}).join('');
 }
 
 function renderTiendasTabla(){
-  var reg=SEL['t-reg'];
+  var reg=document.getElementById('f-t-reg').value;
   var fd=reg?D.filter(function(r){return r.CR_REGION===reg;}):D;
   var m={};fd.forEach(function(r){var k=r.CR_REGION+'|'+r.CR_TIENDA;if(!m[k])m[k]={reg:r.CR_REGION,tienda:r.CR_TIENDA,TOT:0,EF:0,TJ:0,txns:0};m[k].TOT+=r.TOT;m[k].EF+=r.EF;m[k].TJ+=r.TJ;m[k].txns++;});
-  var rows=Object.values(m).sort(function(a,b){return b.TOT-a.TOT;});
-  document.getElementById('tb-tiendas').innerHTML=rows.map(function(t){return'<tr><td>'+cod(t.reg)+'</td><td>'+getRegNombre(t.reg)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td>'+fmt(t.TOT/t.txns)+'</td></tr>';}).join('');
+  document.getElementById('tb-tiendas').innerHTML=Object.values(m).sort(function(a,b){return b.TOT-a.TOT;}).map(function(t){return'<tr><td>'+cod(t.reg)+'</td><td>'+getRegNombre(t.reg)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td>'+fmt(t.TOT/t.txns)+'</td></tr>';}).join('');
 }
 
 function renderTienda(){
@@ -517,8 +472,7 @@ function renderRanking(){
   var reg=document.getElementById('f-tend-reg').value;
   var fdReg=reg?fd.filter(function(r){return r.CR_REGION===reg;}):fd;
   var tm={};fdReg.forEach(function(r){if(!tm[r.CR_TIENDA])tm[r.CR_TIENDA]={tienda:r.CR_TIENDA,reg:r.CR_REGION,TOT:0,txns:0};tm[r.CR_TIENDA].TOT+=r.TOT;tm[r.CR_TIENDA].txns++;});
-  var ranking=Object.values(tm).sort(function(a,b){return a.TOT-b.TOT;});
-  document.getElementById('tb-tend-ranking').innerHTML=ranking.map(function(t,i){return'<tr><td>'+(i+1)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+cod(t.reg)+'</td><td>'+getRegNombre(t.reg)+'</td><td>'+t.txns.toLocaleString()+'</td><td class="tdr">'+fmtK(t.TOT)+'</td></tr>';}).join('');
+  document.getElementById('tb-tend-ranking').innerHTML=Object.values(tm).sort(function(a,b){return a.TOT-b.TOT;}).map(function(t,i){return'<tr><td>'+(i+1)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+cod(t.reg)+'</td><td>'+getRegNombre(t.reg)+'</td><td>'+t.txns.toLocaleString()+'</td><td class="tdr">'+fmtK(t.TOT)+'</td></tr>';}).join('');
 }
 
 function renderInact(){
@@ -529,7 +483,6 @@ function renderInact(){
   var uv={};
   D.forEach(function(r){var k=r.CR_TIENDA+'|'+r.CR_REGION;if(!uv[k]||r.FECHA>uv[k].fecha)uv[k]={tienda:r.CR_TIENDA,region:r.CR_REGION,fecha:r.FECHA};});
   var todas=Object.values(uv);
-  document.getElementById('ki-hab').textContent=TOTAL_HAB.toLocaleString();
   document.getElementById('ki-act').textContent=todas.filter(function(t){return t.fecha>=s7;}).length;
   document.getElementById('ki-30').textContent=todas.filter(function(t){return t.fecha<s7&&t.fecha>=s30;}).length;
   document.getElementById('ki-m30').textContent=todas.filter(function(t){return t.fecha<s30;}).length;
