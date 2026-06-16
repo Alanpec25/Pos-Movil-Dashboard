@@ -161,7 +161,7 @@ tr:hover td{background:var(--gray);}
     <div class="filter-bar">
       <label>Región</label>
       <div class="search-wrap">
-        <input class="search-input" id="s-reg-input" placeholder="Buscar región..." oninput="filterSearch('s-reg')" onfocus="openDropdown('s-reg')" onblur="closeDropdown('s-reg')" autocomplete="off">
+        <input class="search-input" id="s-reg-input" placeholder="Buscar región..." oninput="filterSearch('s-reg')" onfocus="openDropdown('s-reg')" autocomplete="off">
         <span class="search-arrow">&#9660;</span>
         <div class="search-dropdown" id="s-reg-drop"></div>
       </div>
@@ -181,13 +181,13 @@ tr:hover td{background:var(--gray);}
     <div class="filter-bar">
       <label>Región</label>
       <div class="search-wrap">
-        <input class="search-input" id="s-t-reg-input" placeholder="Buscar región..." oninput="filterSearch('s-t-reg');filterTiendas()" onfocus="openDropdown('s-t-reg')" onblur="closeDropdown('s-t-reg')" autocomplete="off">
+        <input class="search-input" id="s-t-reg-input" placeholder="Buscar región..." oninput="filterSearch('s-t-reg');filterTiendas()" onfocus="openDropdown('s-t-reg')" autocomplete="off">
         <span class="search-arrow">&#9660;</span>
         <div class="search-dropdown" id="s-t-reg-drop"></div>
       </div>
       <label>Tienda</label>
       <div class="search-wrap">
-        <input class="search-input" id="s-tienda-input" placeholder="Buscar tienda..." oninput="filterSearch('s-tienda')" onfocus="openDropdown('s-tienda')" onblur="closeDropdown('s-tienda')" autocomplete="off">
+        <input class="search-input" id="s-tienda-input" placeholder="Buscar tienda..." oninput="filterSearch('s-tienda')" onfocus="openDropdown('s-tienda')" autocomplete="off">
         <span class="search-arrow">&#9660;</span>
         <div class="search-dropdown" id="s-tienda-drop"></div>
       </div>
@@ -243,7 +243,7 @@ tr:hover td{background:var(--gray);}
     <div class="filter-bar">
       <label>Región</label>
       <div class="search-wrap">
-        <input class="search-input" id="s-i-reg-input" placeholder="Buscar región..." oninput="filterSearch('s-i-reg')" onfocus="openDropdown('s-i-reg')" onblur="closeDropdown('s-i-reg')" autocomplete="off">
+        <input class="search-input" id="s-i-reg-input" placeholder="Buscar región..." oninput="filterSearch('s-i-reg')" onfocus="openDropdown('s-i-reg')" autocomplete="off">
         <span class="search-arrow">&#9660;</span>
         <div class="search-dropdown" id="s-i-reg-drop"></div>
       </div>
@@ -335,29 +335,50 @@ function renderDropdown(id,query){
   drop.innerHTML=html;
 }
 
+var activeDropdown=null;
+
 function filterSearch(id){
   var q=document.getElementById('s-'+id+'-input').value;
   renderDropdown(id,q);
+  openDropdown(id);
 }
 
 function openDropdown(id){
+  // Cerrar cualquier otro dropdown abierto
+  if(activeDropdown&&activeDropdown!==id){
+    document.getElementById('s-'+activeDropdown+'-drop').classList.remove('open');
+  }
+  activeDropdown=id;
   renderDropdown(id,document.getElementById('s-'+id+'-input').value);
   document.getElementById('s-'+id+'-drop').classList.add('open');
 }
 
-function closeDropdown(id){
-  setTimeout(function(){document.getElementById('s-'+id+'-drop').classList.remove('open');},150);
+function closeAllDropdowns(){
+  ['reg','t-reg','tienda','i-reg'].forEach(function(id){
+    var el=document.getElementById('s-'+id+'-drop');
+    if(el)el.classList.remove('open');
+  });
+  activeDropdown=null;
 }
 
 function selectOpt(id,value,label){
   SEL[id]=value;
   document.getElementById('s-'+id+'-input').value=value?label:'';
+  document.getElementById('s-'+id+'-drop').classList.remove('open');
+  activeDropdown=null;
   renderDropdown(id,'');
   if(id==='reg')renderReg();
   if(id==='t-reg'){fillTiendasOpts();renderTiendasTabla();}
   if(id==='tienda')renderTienda();
   if(id==='i-reg')renderInact();
 }
+
+// Cerrar dropdowns al hacer clic fuera
+document.addEventListener('click',function(e){
+  if(!e.target.classList.contains('search-input')&&!e.target.classList.contains('search-option')&&!e.target.classList.contains('search-arrow')){
+    closeAllDropdowns();
+  }
+});
 
 function fillRegOpts(){
   var regs=[...new Set(D.map(function(r){return r.CR_REGION;}))].sort();
