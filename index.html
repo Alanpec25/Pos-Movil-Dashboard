@@ -318,47 +318,43 @@ function dch(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
 function cod(s){return '<span class="cod">'+s+'</span>';}
 
 // ---- SEARCHABLE DROPDOWN ----
-function buildDropdown(id,opts,allLabel){
+var activeDropdown=null;
+
+function buildDropdown(id,opts){
   OPTS[id]=opts;
-  renderDropdown(id,'');
 }
 
 function renderDropdown(id,query){
   var drop=document.getElementById('s-'+id+'-drop');
-  var q=query.toLowerCase();
-  var filtered=OPTS[id].filter(function(o){return !q||o.label.toLowerCase().indexOf(q)>=0||o.value.toLowerCase().indexOf(q)>=0;});
-  var html='<div class="search-option all" onmousedown="selectOpt(\''+id+'\',\'\',\'Todas\')">Todas</div>';
-  filtered.slice(0,80).forEach(function(o){
-    html+='<div class="search-option'+(SEL[id]===o.value?' selected':'')+'" onmousedown="selectOpt(\''+id+'\',\''+o.value+'\',\''+o.label+'\')">'+o.label+'</div>';
+  if(!drop)return;
+  var q=(query||'').toLowerCase();
+  var filtered=OPTS[id].filter(function(o){
+    return !q||o.label.toLowerCase().indexOf(q)>=0||o.value.toLowerCase().indexOf(q)>=0;
   });
-  if(filtered.length>80)html+='<div class="search-option all">...y '+(filtered.length-80)+' mas. Afina la busqueda.</div>';
+  var html='<div class="search-option all" data-id="'+id+'" data-value="" data-label="Todas">Todas</div>';
+  filtered.slice(0,100).forEach(function(o){
+    var sel=SEL[id]===o.value?' selected':'';
+    var safeLabel=o.label.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+    html+='<div class="search-option'+sel+'" data-id="'+id+'" data-value="'+o.value+'" data-label="'+safeLabel+'">'+o.label+'</div>';
+  });
+  if(filtered.length>100)html+='<div class="search-option all">... '+(filtered.length-100)+' mas. Escribe para filtrar.</div>';
   drop.innerHTML=html;
 }
 
-var activeDropdown=null;
-
-function filterSearch(id){
-  var q=document.getElementById('s-'+id+'-input').value;
-  renderDropdown(id,q);
-  openDropdown(id);
-}
-
 function openDropdown(id){
-  // Cerrar cualquier otro dropdown abierto
   if(activeDropdown&&activeDropdown!==id){
-    document.getElementById('s-'+activeDropdown+'-drop').classList.remove('open');
+    var prev=document.getElementById('s-'+activeDropdown+'-drop');
+    if(prev)prev.classList.remove('open');
   }
   activeDropdown=id;
   renderDropdown(id,document.getElementById('s-'+id+'-input').value);
   document.getElementById('s-'+id+'-drop').classList.add('open');
 }
 
-function closeAllDropdowns(){
-  ['reg','t-reg','tienda','i-reg'].forEach(function(id){
-    var el=document.getElementById('s-'+id+'-drop');
-    if(el)el.classList.remove('open');
-  });
-  activeDropdown=null;
+function filterSearch(id){
+  renderDropdown(id,document.getElementById('s-'+id+'-input').value);
+  if(activeDropdown!==id)openDropdown(id);
+  else document.getElementById('s-'+id+'-drop').classList.add('open');
 }
 
 function selectOpt(id,value,label){
@@ -366,17 +362,24 @@ function selectOpt(id,value,label){
   document.getElementById('s-'+id+'-input').value=value?label:'';
   document.getElementById('s-'+id+'-drop').classList.remove('open');
   activeDropdown=null;
-  renderDropdown(id,'');
   if(id==='reg')renderReg();
   if(id==='t-reg'){fillTiendasOpts();renderTiendasTabla();}
   if(id==='tienda')renderTienda();
   if(id==='i-reg')renderInact();
 }
 
-// Cerrar dropdowns al hacer clic fuera
-document.addEventListener('click',function(e){
-  if(!e.target.classList.contains('search-input')&&!e.target.classList.contains('search-option')&&!e.target.classList.contains('search-arrow')){
-    closeAllDropdowns();
+// Usar mousedown para capturar antes del blur
+document.addEventListener('mousedown',function(e){
+  var opt=e.target.closest?e.target.closest('.search-option'):null;
+  if(opt&&opt.getAttribute('data-id')){
+    e.preventDefault();
+    selectOpt(opt.getAttribute('data-id'),opt.getAttribute('data-value'),opt.getAttribute('data-label'));
+    return;
+  }
+  var isSearch=e.target.classList.contains('search-input')||e.target.classList.contains('search-arrow')||e.target.classList.contains('search-wrap');
+  if(!isSearch&&activeDropdown){
+    document.getElementById('s-'+activeDropdown+'-drop').classList.remove('open');
+    activeDropdown=null;
   }
 });
 
