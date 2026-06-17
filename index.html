@@ -277,7 +277,12 @@ function doLogin(){
     document.getElementById('lerr').textContent='Usuario o contrasena incorrectos.';
   }
 }
-function fmt(n){return '$'+Number(n).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmt(n){
+  var num=Number(n);
+  var parts=num.toFixed(2).split('.');
+  parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  return '$'+parts[0]+'.'+parts[1];
+}
 function fmtK(n){return n>=1000000?'$'+(n/1000000).toFixed(2)+'M':n>=1000?'$'+(n/1000).toFixed(1)+'K':fmt(n);}
 function pct(a,b){return b>0?(a/b*100).toFixed(1)+'%':'0%';}
 function dch(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
@@ -477,7 +482,7 @@ function renderReg(){
     document.getElementById('card-reg-tiendas').style.display='block';
     document.getElementById('lbl-reg-tiendas').textContent='Top Tiendas - '+reg+' '+getRegNombre(reg);
     var ts=aggBy('CR_TIENDA',fd).sort(function(a,b){return b.TOT-a.TOT;});
-    document.getElementById('tb-reg-tiendas').innerHTML=ts.map(function(t){return'<tr><td>'+cod(t.key)+'</td><td>'+getNombre(t.key)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td><div style="display:flex;align-items:center;gap:6px;"><div class="prog-wrap" style="flex:1;"><div class="prog-bar" style="width:'+pct(t.TOT,tot)+'"></div></div><span style="font-size:11px;color:#6B6B6B;min-width:36px;">'+pct(t.TOT,tot)+'</span></div></td></tr>';}).join('');
+    document.getElementById('tb-reg-tiendas').innerHTML=ts.map(function(t){return'<tr><td>'+cod(t.key)+'</td><td>'+getNombre(t.key)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmt(t.EF)+'</td><td>'+fmt(t.TJ)+'</td><td class="tdr">'+fmt(t.TOT)+'</td><td><div style="display:flex;align-items:center;gap:6px;"><div class="prog-wrap" style="flex:1;"><div class="prog-bar" style="width:'+pct(t.TOT,tot)+'"></div></div><span style="font-size:11px;color:#6B6B6B;min-width:36px;">'+pct(t.TOT,tot)+'</span></div></td></tr>';}).join('');
     setTableFooter('tb-reg-tiendas',ts.length,'tiendas');
   }
 }
