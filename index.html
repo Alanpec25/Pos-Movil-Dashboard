@@ -192,10 +192,8 @@ tr:hover td{background:var(--gray);}
   <!-- TENDENCIAS -->
   <div class="panel" id="panel-tendencias">
     <div class="filter-bar">
-      <label>Periodo</label>
-      <select id="f-tend" onchange="renderTend()"><option value="30">Últimos 30 días</option><option value="60">Últimos 60 días</option><option value="0">Todo el historial</option></select>
-      <label>Inicio</label><input type="date" id="f-tend-ini" onchange="renderTend()">
-      <label>Fin</label><input type="date" id="f-tend-fin" onchange="renderTend()">
+      <label>Fecha inicio</label><input type="date" id="f-tend-ini" onchange="renderTend()">
+      <label>Fecha fin</label><input type="date" id="f-tend-fin" onchange="renderTend()">
     </div>
     <div class="card"><div class="card-title">Evolución diaria de ventas</div><div style="position:relative;height:220px;"><canvas id="ch-diario"></canvas></div></div>
     <div class="grid-2">
@@ -309,6 +307,14 @@ function loadData(data){
   var fechas=D.map(function(r){return r.FECHA;}).sort();
   document.getElementById('lbl').textContent='Datos al '+fechas[fechas.length-1];
   fillFilters();
+  // Setear rango de fechas de tendencias al mes en curso por default
+  var hoy=new Date();
+  var ayer=new Date(hoy);ayer.setDate(ayer.getDate()-1);
+  var mesHoy=hoy.getFullYear()+'-'+(hoy.getMonth()<9?'0':'')+(hoy.getMonth()+1);
+  var primerDia=mesHoy+'-01';
+  var ultimoDia=ayer.toISOString().slice(0,10);
+  document.getElementById('f-tend-ini').value=primerDia;
+  document.getElementById('f-tend-fin').value=ultimoDia;
   renderGen();renderReg();renderTiendasTabla();renderTend();renderRanking();renderInact();
 }
 
@@ -497,12 +503,7 @@ function getTendFiltro(){
   var ini=document.getElementById('f-tend-ini').value;
   var fin=document.getElementById('f-tend-fin').value;
   if(ini&&fin)return D.filter(function(r){return r.FECHA>=ini&&r.FECHA<=fin;});
-  var dias=parseInt(document.getElementById('f-tend').value)||0;
-  if(dias===0)return D;
-  var fechas=D.map(function(r){return r.FECHA;}).sort();
-  var ult=fechas[fechas.length-1];
-  var c=new Date(ult);c.setDate(c.getDate()-(dias-1));
-  return D.filter(function(r){return r.FECHA>=c.toISOString().slice(0,10);});
+  return D;
 }
 
 function renderTend(){
