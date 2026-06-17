@@ -232,6 +232,7 @@ tr:hover td{background:var(--gray);}
       <select id="f-i-reg" onchange="renderInact()"><option value="">Todas las regiones</option></select>
       <label>Semaforo</label>
       <select id="f-i-dias" onchange="renderInact()">
+        <option value="todas">Todas</option>
         <option value="verde">&#x1F7E2; Menos de 7 dias</option>
         <option value="amarillo">&#x1F7E1; 8 - 30 dias</option>
         <option value="rojo">&#x1F534; +30 dias</option>
@@ -574,13 +575,17 @@ function renderInact(){
   var semaforo=document.getElementById('f-i-dias').value;
   var inact=todas.filter(function(t){
     var dias=Math.floor((new Date(ult)-new Date(t.fecha))/(86400000));
-    var enRango=semaforo==='verde'?dias<7:semaforo==='amarillo'?(dias>=8&&dias<=30):dias>30;
+    var enRango=semaforo==='todas'?true:semaforo==='verde'?dias<7:semaforo==='amarillo'?(dias>=8&&dias<=30):dias>30;
     return enRango&&(!rf||t.region===rf);
   }).map(function(t){return Object.assign({},t,{dias:Math.floor((new Date(ult)-new Date(t.fecha))/(86400000))});}).sort(function(a,b){return b.dias-a.dias;});
   setTableFooter('tb-inact',inact.length,'tiendas');
   document.getElementById('tb-inact').innerHTML=inact.map(function(t){
     var badge,dot,label;
-    if(semaforo==='verde'){badge='<span class="badge badge-green">'+t.dias+' dias</span>';dot='dot-g';label='Activa';}
+    if(semaforo==='todas'){
+      if(t.dias<7){badge='<span class="badge badge-green">'+t.dias+' dias</span>';dot='dot-g';label='Activa';}
+      else if(t.dias>=8&&t.dias<=30){badge='<span class="badge badge-yellow">'+t.dias+' dias</span>';dot='dot-y';label='Sin venta reciente';}
+      else{badge='<span class="badge badge-red">+'+t.dias+' dias</span>';dot='dot-r';label='Inactiva';}
+    } else if(semaforo==='verde'){badge='<span class="badge badge-green">'+t.dias+' dias</span>';dot='dot-g';label='Activa';}
     else if(semaforo==='amarillo'){badge='<span class="badge badge-yellow">'+t.dias+' dias</span>';dot='dot-y';label='Sin venta reciente';}
     else{badge='<span class="badge badge-red">+'+t.dias+' dias</span>';dot='dot-r';label='Inactiva';}
     return'<tr><td>'+cod(t.region)+'</td><td>'+getRegNombre(t.region)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.fecha+'</td><td class="tdc">'+badge+'</td><td><span class="dot '+dot+'"></span>'+label+'</td></tr>';
