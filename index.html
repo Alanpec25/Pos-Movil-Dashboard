@@ -220,17 +220,17 @@ tr:hover td{background:var(--gray);}
     <div class="kpi-grid">
       <div class="kpi-card ar"><div class="kpi-label">Total POS Móvil habilitadas</div><div class="kpi-value">443</div><div class="kpi-sub">tiendas habilitadas</div></div>
       <div class="kpi-card ag"><div class="kpi-label"><span class="dot dot-g"></span>Activas (7 días)</div><div class="kpi-value" id="ki-act">-</div><div class="kpi-sub">con al menos 1 venta</div></div>
-      <div class="kpi-card ay"><div class="kpi-label"><span class="dot dot-y"></span>Inactivas (7-30 días)</div><div class="kpi-value" id="ki-30">-</div><div class="kpi-sub">sin venta reciente</div></div>
+      <div class="kpi-card ay"><div class="kpi-label"><span class="dot dot-y"></span>Inactivas (8-30 días)</div><div class="kpi-value" id="ki-30">-</div><div class="kpi-sub">sin venta reciente</div></div>
       <div class="kpi-card ar"><div class="kpi-label"><span class="dot dot-r"></span>Inactivas (+30 días)</div><div class="kpi-value" id="ki-m30">-</div><div class="kpi-sub">atención urgente</div></div>
     </div>
     <div class="filter-bar">
       <label>Región</label>
       <select id="f-i-reg" onchange="renderInact()"><option value="">Todas las regiones</option></select>
-      <label>Antigüedad</label>
+      <label>Semáforo</label>
       <select id="f-i-dias" onchange="renderInact()">
-        <option value="7">Más de 7 días</option>
-        <option value="30">Más de 30 días</option>
-        <option value="60">Más de 60 días</option>
+        <option value="verde">🟢 Menos de 7 días</option>
+        <option value="amarillo">🟡 8 - 30 días</option>
+        <option value="rojo">🔴 +30 días</option>
       </select>
     </div>
     <div class="card"><div class="card-header"><div class="card-title">Tiendas sin venta en los últimos 7 días</div><button class="dl-btn" onclick="downloadTable('tb-inact','tiendas_inactivas')">&#8595; Descargar</button></div>
@@ -538,9 +538,12 @@ function renderInact(){
   document.getElementById('ki-30').textContent=todas.filter(function(t){return t.fecha<s7&&t.fecha>=s30;}).length;
   document.getElementById('ki-m30').textContent=todas.filter(function(t){return t.fecha<s30;}).length;
   var rf=document.getElementById('f-i-reg').value;
-  var df=parseInt(document.getElementById('f-i-dias').value)||7;
-  var cx=new Date(ult);cx.setDate(cx.getDate()-(df-1));var sx=cx.toISOString().slice(0,10);
-  var inact=todas.filter(function(t){return t.fecha<sx&&(!rf||t.region===rf);}).map(function(t){return Object.assign({},t,{dias:Math.floor((new Date(ult)-new Date(t.fecha))/(86400000))});}).sort(function(a,b){return b.dias-a.dias;});
+  var semaforo=document.getElementById('f-i-dias').value;
+  var inact=todas.filter(function(t){
+    var dias=Math.floor((new Date(ult)-new Date(t.fecha))/(86400000));
+    var enRango=semaforo==='verde'?dias<7:semaforo==='amarillo'?(dias>=8&&dias<=30):dias>30;
+    return enRango&&(!rf||t.region===rf);
+  }).map(function(t){return Object.assign({},t,{dias:Math.floor((new Date(ult)-new Date(t.fecha))/(86400000))});}).sort(function(a,b){return b.dias-a.dias;});
   document.getElementById('tb-inact').innerHTML=inact.map(function(t){var b=t.dias>30?'<span class="badge badge-red">+'+t.dias+' días</span>':'<span class="badge badge-yellow">'+t.dias+' días</span>';var d=t.dias>30?'dot-r':'dot-y';return'<tr><td>'+cod(t.region)+'</td><td>'+getRegNombre(t.region)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.fecha+'</td><td class="tdc">'+b+'</td><td><span class="dot '+d+'"></span>'+(t.dias>30?'Atención urgente':'Sin venta reciente')+'</td></tr>';}).join('');
 }
 
