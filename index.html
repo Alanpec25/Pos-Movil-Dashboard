@@ -176,7 +176,7 @@ tr:hover td{background:var(--gray);}
       <label>Tienda</label>
       <select id="f-tienda" onchange="renderTienda()"><option value="">Selecciona una tienda</option></select>
       <label>Mes</label>
-      <select id="f-t-mes" onchange="renderTienda()"><option value="">Todos los meses</option></select>
+      <select id="f-t-mes" onchange="renderTienda();renderTiendasTabla();"><option value="">Todos los meses</option></select>
     </div>
     <div class="kpi-grid" id="kpi-tienda"></div>
     <div class="card" id="card-t-chart" style="display:none;"><div class="card-title">Venta diaria</div><div style="position:relative;height:200px;"><canvas id="ch-t-diario"></canvas></div></div>
@@ -186,7 +186,7 @@ tr:hover td{background:var(--gray);}
       <tbody id="tb-t-detalle"></tbody></table>
     </div>
     <div class="card">
-      <div class="card-header"><div class="card-title">Todas las Tiendas</div><button class="dl-btn" onclick="downloadTable('tb-tiendas','todas_tiendas')">&#8595; Descargar</button></div>
+      <div class="card-header"><div class="card-title">Top Tiendas</div><button class="dl-btn" onclick="downloadTable('tb-tiendas','todas_tiendas')">&#8595; Descargar</button></div>
       <table><thead><tr><th>CR Region</th><th>Nombre Region</th><th>CR Tienda</th><th>Nombre Tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>Ticket prom.</th></tr></thead>
       <tbody id="tb-tiendas"></tbody></table>
     </div>
@@ -470,7 +470,8 @@ function renderReg(){
 
 function renderTiendasTabla(){
   var reg=document.getElementById('f-t-reg').value;
-  var fd=reg?D.filter(function(r){return r.CR_REGION===reg;}):D;
+  var mes=document.getElementById('f-t-mes').value;
+  var fd=D.filter(function(r){return(!reg||r.CR_REGION===reg)&&(!mes||r.FECHA.slice(0,7)===mes);});
   var m={};fd.forEach(function(r){var k=r.CR_REGION+'|'+r.CR_TIENDA;if(!m[k])m[k]={reg:r.CR_REGION,tienda:r.CR_TIENDA,TOT:0,EF:0,TJ:0,txns:0};m[k].TOT+=r.TOT;m[k].EF+=r.EF;m[k].TJ+=r.TJ;m[k].txns++;});
   var rows=Object.values(m).sort(function(a,b){return b.TOT-a.TOT;});
   document.getElementById('tb-tiendas').innerHTML=rows.map(function(t){return'<tr><td>'+cod(t.reg)+'</td><td>'+getRegNombre(t.reg)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td>'+fmt(t.TOT/t.txns)+'</td></tr>';}).join('');
@@ -485,6 +486,15 @@ function renderTienda(){
   document.getElementById('card-t-detalle').style.display='none';
   if(!t)return;
   var fd=D.filter(function(r){return r.CR_TIENDA===t&&(!mes||r.FECHA.slice(0,7)===mes);});
+  // Autocompletar región si está vacía
+  var regSel=document.getElementById('f-t-reg');
+  if(!regSel.value&&fd.length>0){
+    var autoReg=fd[0].CR_REGION;
+    regSel.value=autoReg;
+    fillTiendasSelect(autoReg);
+    document.getElementById('f-tienda').value=t;
+    renderTiendasTabla();
+  }
   var tot=fd.reduce(function(s,r){return s+r.TOT;},0);
   var ef=fd.reduce(function(s,r){return s+r.EF;},0);
   var tj=fd.reduce(function(s,r){return s+r.TJ;},0);
