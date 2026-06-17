@@ -220,7 +220,7 @@ tr:hover td{background:var(--gray);}
     <div class="kpi-grid">
       <div class="kpi-card ar"><div class="kpi-label">Total POS Móvil habilitadas</div><div class="kpi-value">443</div><div class="kpi-sub">tiendas habilitadas</div></div>
       <div class="kpi-card ag"><div class="kpi-label"><span class="dot dot-g"></span>Activas (7 días)</div><div class="kpi-value" id="ki-act">-</div><div class="kpi-sub">con al menos 1 venta</div></div>
-      <div class="kpi-card ay"><div class="kpi-label"><span class="dot dot-y"></span>Inactivas (8-30 días)</div><div class="kpi-value" id="ki-30">-</div><div class="kpi-sub">sin venta reciente</div></div>
+      <div class="kpi-card ay"><div class="kpi-label"><span class="dot dot-y"></span>Sin Venta Reciente (8-30 días)</div><div class="kpi-value" id="ki-30">-</div><div class="kpi-sub">sin venta reciente</div></div>
       <div class="kpi-card ar"><div class="kpi-label"><span class="dot dot-r"></span>Inactivas (+30 días)</div><div class="kpi-value" id="ki-m30">-</div><div class="kpi-sub">atención urgente</div></div>
     </div>
     <div class="filter-bar">
@@ -233,7 +233,7 @@ tr:hover td{background:var(--gray);}
         <option value="rojo">🔴 +30 días</option>
       </select>
     </div>
-    <div class="card"><div class="card-header"><div class="card-title">Tiendas sin venta en los últimos 7 días</div><button class="dl-btn" onclick="downloadTable('tb-inact','tiendas_inactivas')">&#8595; Descargar</button></div>
+    <div class="card"><div class="card-header"><div class="card-title">Reporte de Inactividad de Venta por Tienda</div><button class="dl-btn" onclick="downloadTable('tb-inact','tiendas_inactivas')">&#8595; Descargar</button></div>
       <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>CR Tienda</th><th>Nombre Tienda</th><th>Última venta</th><th class="tdc">Días sin venta</th><th>Estado</th></tr></thead>
       <tbody id="tb-inact"></tbody></table>
     </div>
@@ -544,7 +544,20 @@ function renderInact(){
     var enRango=semaforo==='verde'?dias<7:semaforo==='amarillo'?(dias>=8&&dias<=30):dias>30;
     return enRango&&(!rf||t.region===rf);
   }).map(function(t){return Object.assign({},t,{dias:Math.floor((new Date(ult)-new Date(t.fecha))/(86400000))});}).sort(function(a,b){return b.dias-a.dias;});
-  document.getElementById('tb-inact').innerHTML=inact.map(function(t){var b=t.dias>30?'<span class="badge badge-red">+'+t.dias+' días</span>':'<span class="badge badge-yellow">'+t.dias+' días</span>';var d=t.dias>30?'dot-r':'dot-y';return'<tr><td>'+cod(t.region)+'</td><td>'+getRegNombre(t.region)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.fecha+'</td><td class="tdc">'+b+'</td><td><span class="dot '+d+'"></span>'+(t.dias>30?'Atención urgente':'Sin venta reciente')+'</td></tr>';}).join('');
+  document.getElementById('tb-inact').innerHTML=inact.map(function(t){
+    var badge,dot,label;
+    if(semaforo==='verde'){
+      badge='<span class="badge badge-green">'+t.dias+' días</span>';
+      dot='dot-g';label='Activa';
+    } else if(semaforo==='amarillo'){
+      badge='<span class="badge badge-yellow">'+t.dias+' días</span>';
+      dot='dot-y';label='Sin venta reciente';
+    } else {
+      badge='<span class="badge badge-red">+'+t.dias+' días</span>';
+      dot='dot-r';label='Inactiva';
+    }
+    return'<tr><td>'+cod(t.region)+'</td><td>'+getRegNombre(t.region)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.fecha+'</td><td class="tdc">'+badge+'</td><td><span class="dot '+dot+'"></span>'+label+'</td></tr>';
+  }).join('');
 }
 
 function downloadTable(tableId, filename){
