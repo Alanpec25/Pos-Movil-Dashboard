@@ -310,18 +310,20 @@ function downloadTable(tableId,filename){
   if(headers.length){
     var headerRow=[];
     headers.forEach(function(th){
-      var text=(th.innerText||th.textContent||'').replace(/,/g,' ').replace(/[\r\n]+/g,' ').trim();
+      var text=(th.innerText||th.textContent||'').replace(/[\r\n]+/g,' ').trim();
       headerRow.push('"'+text+'"');
     });
     csv.push(headerRow.join(','));
   }
-  // Filas de datos
+  // Filas de datos — las comas dentro de valores monetarios quedan protegidas por las comillas dobles
   var rows=tbody.querySelectorAll('tr');
   rows.forEach(function(row){
     var cols=row.querySelectorAll('td');
     var rowData=[];
     cols.forEach(function(col){
-      var text=(col.innerText||col.textContent||'').replace(/,/g,' ').replace(/[\r\n]+/g,' ').trim();
+      var text=(col.innerText||col.textContent||'').replace(/[\r\n]+/g,' ').trim();
+      // Escapar comillas dobles internas duplicándolas (estándar CSV)
+      text=text.replace(/"/g,'""');
       rowData.push('"'+text+'"');
     });
     if(rowData.length)csv.push(rowData.join(','));
