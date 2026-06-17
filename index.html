@@ -45,6 +45,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .kpi-sub{font-size:11px;color:var(--mid);margin-top:4px;}
 .card{background:#fff;border-radius:10px;border:1px solid var(--border);padding:1.25rem;margin-bottom:1rem;}
 .card-title{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.04em;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.card-header .card-title{margin-bottom:0;}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
 th{text-align:left;padding:8px 12px;font-size:11px;font-weight:600;color:var(--mid);text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--border);background:var(--gray);}
@@ -56,6 +58,7 @@ tr:hover td{background:var(--gray);}
 .badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;}
 .badge-red{background:var(--red-light);color:var(--red);}
 .badge-yellow{background:var(--yellow-light);color:#9a6800;}
+.badge-green{background:var(--green-light);color:var(--green);}
 .prog-wrap{background:var(--gray);border-radius:4px;height:6px;overflow:hidden;margin-top:4px;}
 .prog-bar{height:100%;border-radius:4px;background:var(--red);}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;}
@@ -64,12 +67,10 @@ tr:hover td{background:var(--gray);}
 .dot-r{background:var(--red);}
 .filter-bar{display:flex;gap:10px;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;}
 .filter-bar label{font-size:12px;color:var(--mid);font-weight:500;}
-.filter-bar select,.filter-bar input[type=date]{font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);cursor:pointer;min-width:180px;}
-.dl-btn{background:#2E7D32;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;margin-left:auto;}
+.filter-bar select,.filter-bar input[type=date]{font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;color:var(--dark);cursor:pointer;min-width:160px;}
+.dl-btn{background:var(--green);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;}
 .dl-btn:hover{background:#1b5e20;}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
-.card-header .card-title{margin-bottom:0;}
-.table-footer{font-size:12px;color:var(--mid);padding:8px 12px;border-top:2px solid var(--border);background:var(--gray);border-radius:0 0 6px 6px;text-align:right;}
+.table-footer{font-size:12px;color:var(--mid);padding:8px 12px;border-top:2px solid var(--border);background:var(--gray);text-align:right;}
 .upload-zone{border:2px dashed var(--border);border-radius:10px;padding:1.5rem;text-align:center;margin-bottom:1.5rem;background:#fff;cursor:pointer;}
 #file-input{display:none;}
 .cod{font-family:monospace;font-size:12px;background:var(--gray);padding:1px 5px;border-radius:3px;color:var(--mid);}
@@ -111,7 +112,7 @@ tr:hover td{background:var(--gray);}
 
 <nav class="tabs-bar">
   <div class="tab active" onclick="showTab('general',this)">General</div>
-  <div class="tab" onclick="showTab('regiones',this)">Por Región</div>
+  <div class="tab" onclick="showTab('regiones',this)">Por Region</div>
   <div class="tab" onclick="showTab('tiendas',this)">Por Tienda</div>
   <div class="tab" onclick="showTab('tendencias',this)">Tendencias</div>
   <div class="tab" onclick="showTab('inactivas',this)">Inactivas</div>
@@ -143,13 +144,13 @@ tr:hover td{background:var(--gray);}
       <div class="card"><div class="card-title">Efectivo vs Tarjeta</div><div style="position:relative;height:200px;"><canvas id="ch-donut"></canvas></div></div>
       <div class="card"><div class="card-title">Actividad por hora</div><div style="position:relative;height:200px;"><canvas id="ch-hora"></canvas></div></div>
     </div>
-
+    <div class="card"><div class="card-title">Crecimiento de tiendas activas por mes</div><div style="position:relative;height:180px;"><canvas id="ch-crec"></canvas></div></div>
   </div>
 
   <!-- REGIONES -->
   <div class="panel" id="panel-regiones">
     <div class="filter-bar">
-      <label>Región</label>
+      <label>Region</label>
       <select id="f-reg" onchange="renderReg()"><option value="">Todas las regiones</option></select>
       <label>Mes</label>
       <select id="f-reg-mes" onchange="renderReg()"><option value="">Todos los meses</option></select>
@@ -157,12 +158,12 @@ tr:hover td{background:var(--gray);}
     <div class="kpi-grid" id="kpi-reg"></div>
     <div class="card" id="card-reg-tabla">
       <div class="card-header"><div class="card-title" id="lbl-reg-tabla">Top Regiones</div><button class="dl-btn" onclick="downloadTable('tb-reg-resumen','top_regiones')">&#8595; Descargar</button></div>
-      <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>% del total</th></tr></thead>
+      <table><thead><tr><th>CR Region</th><th>Nombre Region</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>% del total</th></tr></thead>
       <tbody id="tb-reg-resumen"></tbody></table>
     </div>
     <div class="card" id="card-reg-tiendas" style="display:none;">
-      <div class="card-header"><div class="card-title" id="lbl-reg-tiendas">Top Tiendas de la Región</div><button class="dl-btn" onclick="downloadTable('tb-reg-tiendas','top_tiendas_region')">&#8595; Descargar</button></div>
-      <table><thead><tr><th>CR Tienda</th><th>Nombre Tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>% de la región</th></tr></thead>
+      <div class="card-header"><div class="card-title" id="lbl-reg-tiendas">Top Tiendas de la Region</div><button class="dl-btn" onclick="downloadTable('tb-reg-tiendas','top_tiendas_region')">&#8595; Descargar</button></div>
+      <table><thead><tr><th>CR Tienda</th><th>Nombre Tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>% de la region</th></tr></thead>
       <tbody id="tb-reg-tiendas"></tbody></table>
     </div>
   </div>
@@ -170,7 +171,7 @@ tr:hover td{background:var(--gray);}
   <!-- TIENDAS -->
   <div class="panel" id="panel-tiendas">
     <div class="filter-bar">
-      <label>Región</label>
+      <label>Region</label>
       <select id="f-t-reg" onchange="onTRegChange()"><option value="">Todas las regiones</option></select>
       <label>Tienda</label>
       <select id="f-tienda" onchange="renderTienda()"><option value="">Selecciona una tienda</option></select>
@@ -179,12 +180,14 @@ tr:hover td{background:var(--gray);}
     </div>
     <div class="kpi-grid" id="kpi-tienda"></div>
     <div class="card" id="card-t-chart" style="display:none;"><div class="card-title">Venta diaria</div><div style="position:relative;height:200px;"><canvas id="ch-t-diario"></canvas></div></div>
-    <div class="card" id="card-t-detalle" style="display:none;"><div class="card-header"><div class="card-title">Detalle de ventas por día</div><button class="dl-btn" onclick="downloadTable('tb-t-detalle','detalle_ventas_dia')">&#8595; Descargar</button></div>
+    <div class="card" id="card-t-detalle" style="display:none;">
+      <div class="card-header"><div class="card-title">Detalle de ventas por dia</div><button class="dl-btn" onclick="downloadTable('tb-t-detalle','detalle_ventas_dia')">&#8595; Descargar</button></div>
       <table><thead><tr><th>Fecha</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th></tr></thead>
       <tbody id="tb-t-detalle"></tbody></table>
     </div>
-    <div class="card"><div class="card-header"><div class="card-title">Todas las Tiendas</div><button class="dl-btn" onclick="downloadTable('tb-tiendas','todas_tiendas')">&#8595; Descargar</button></div>
-      <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>CR Tienda</th><th>Nombre Tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>Ticket prom.</th></tr></thead>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Todas las Tiendas</div><button class="dl-btn" onclick="downloadTable('tb-tiendas','todas_tiendas')">&#8595; Descargar</button></div>
+      <table><thead><tr><th>CR Region</th><th>Nombre Region</th><th>CR Tienda</th><th>Nombre Tienda</th><th>Txns</th><th>Efectivo</th><th>Tarjeta</th><th class="tdr">Total</th><th>Ticket prom.</th></tr></thead>
       <tbody id="tb-tiendas"></tbody></table>
     </div>
   </div>
@@ -194,22 +197,24 @@ tr:hover td{background:var(--gray);}
     <div class="filter-bar">
       <label>Fecha inicio</label><input type="date" id="f-tend-ini" onchange="renderTend()">
       <label>Fecha fin</label><input type="date" id="f-tend-fin" onchange="renderTend()">
+      <label>Region</label>
+      <select id="f-tend-reg2" onchange="renderTend()" style="min-width:180px;"><option value="">Todas las regiones</option></select>
     </div>
-    <div class="card"><div class="card-title">Evolución diaria de ventas</div><div style="position:relative;height:220px;"><canvas id="ch-diario"></canvas></div></div>
+    <div class="card"><div class="card-title">Evolucion diaria de ventas</div><div style="position:relative;height:220px;"><canvas id="ch-diario"></canvas></div></div>
     <div class="grid-2">
-      <div class="card"><div class="card-title">Venta por día de la semana</div><div style="position:relative;height:200px;"><canvas id="ch-diasem"></canvas></div></div>
-      <div class="card"><div class="card-title">Comparativa mensual</div><div style="position:relative;height:200px;"><canvas id="ch-mensual2"></canvas></div></div>
+      <div class="card"><div class="card-title">Venta por dia de la semana</div><div style="position:relative;height:200px;"><canvas id="ch-diasem"></canvas></div></div>
+      <div class="card"><div class="card-title">Actividad por hora</div><div style="position:relative;height:200px;"><canvas id="ch-hora-tend"></canvas></div></div>
     </div>
-    <div class="card"><div class="card-title">Crecimiento de tiendas activas por mes</div><div style="position:relative;height:180px;"><canvas id="ch-crec"></canvas></div></div>
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px;">
-        <span class="card-title" style="margin-bottom:0;">Ranking Tiendas — menor a mayor venta</span><button class="dl-btn" onclick="downloadTable('tb-tend-ranking','ranking_tiendas')">&#8595; Descargar</button>
-        <div class="filter-bar" style="margin-bottom:0;">
-          <label>Región</label>
-          <select id="f-tend-reg" onchange="renderRanking()" style="min-width:160px;"><option value="">Todas</option></select>
+        <span class="card-title" style="margin-bottom:0;">Ranking Tiendas - menor a mayor venta</span>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <label style="font-size:12px;color:var(--mid);font-weight:500;">Region</label>
+          <select id="f-tend-reg" onchange="renderRanking()" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:#fff;min-width:160px;"><option value="">Todas</option></select>
+          <button class="dl-btn" onclick="downloadTable('tb-tend-ranking','ranking_tiendas')">&#8595; Descargar</button>
         </div>
       </div>
-      <table><thead><tr><th>Pos.</th><th>CR Tienda</th><th>Nombre Tienda</th><th>CR Región</th><th>Nombre Región</th><th>Txns</th><th class="tdr">Total</th></tr></thead>
+      <table><thead><tr><th>Pos.</th><th>CR Tienda</th><th>Nombre Tienda</th><th>CR Region</th><th>Nombre Region</th><th>Txns</th><th class="tdr">Total</th></tr></thead>
       <tbody id="tb-tend-ranking"></tbody></table>
     </div>
   </div>
@@ -217,23 +222,24 @@ tr:hover td{background:var(--gray);}
   <!-- INACTIVAS -->
   <div class="panel" id="panel-inactivas">
     <div class="kpi-grid">
-      <div class="kpi-card ar"><div class="kpi-label">Total POS Móvil habilitadas</div><div class="kpi-value">443</div><div class="kpi-sub">tiendas habilitadas</div></div>
-      <div class="kpi-card ag"><div class="kpi-label"><span class="dot dot-g"></span>Activas (7 días)</div><div class="kpi-value" id="ki-act">-</div><div class="kpi-sub">con al menos 1 venta</div></div>
-      <div class="kpi-card ay"><div class="kpi-label"><span class="dot dot-y"></span>Sin Venta Reciente (8-30 días)</div><div class="kpi-value" id="ki-30">-</div><div class="kpi-sub">sin venta reciente</div></div>
-      <div class="kpi-card ar"><div class="kpi-label"><span class="dot dot-r"></span>Inactivas (+30 días)</div><div class="kpi-value" id="ki-m30">-</div><div class="kpi-sub">atención urgente</div></div>
+      <div class="kpi-card ar"><div class="kpi-label">Total POS Movil habilitadas</div><div class="kpi-value">443</div><div class="kpi-sub">tiendas habilitadas</div></div>
+      <div class="kpi-card ag"><div class="kpi-label"><span class="dot dot-g"></span>Activas (7 dias)</div><div class="kpi-value" id="ki-act">-</div><div class="kpi-sub">con al menos 1 venta</div></div>
+      <div class="kpi-card ay"><div class="kpi-label"><span class="dot dot-y"></span>Sin Venta Reciente (8-30 dias)</div><div class="kpi-value" id="ki-30">-</div><div class="kpi-sub">sin venta reciente</div></div>
+      <div class="kpi-card ar"><div class="kpi-label"><span class="dot dot-r"></span>Inactivas (+30 dias)</div><div class="kpi-value" id="ki-m30">-</div><div class="kpi-sub">atencion urgente</div></div>
     </div>
     <div class="filter-bar">
-      <label>Región</label>
+      <label>Region</label>
       <select id="f-i-reg" onchange="renderInact()"><option value="">Todas las regiones</option></select>
-      <label>Semáforo</label>
+      <label>Semaforo</label>
       <select id="f-i-dias" onchange="renderInact()">
-        <option value="verde">🟢 Menos de 7 días</option>
-        <option value="amarillo">🟡 8 - 30 días</option>
-        <option value="rojo">🔴 +30 días</option>
+        <option value="verde">&#x1F7E2; Menos de 7 dias</option>
+        <option value="amarillo">&#x1F7E1; 8 - 30 dias</option>
+        <option value="rojo">&#x1F534; +30 dias</option>
       </select>
     </div>
-    <div class="card"><div class="card-header"><div class="card-title">Reporte de Inactividad de Venta por Tienda</div><button class="dl-btn" onclick="downloadTable('tb-inact','tiendas_inactivas')">&#8595; Descargar</button></div>
-      <table><thead><tr><th>CR Región</th><th>Nombre Región</th><th>CR Tienda</th><th>Nombre Tienda</th><th>Última venta</th><th class="tdc">Días sin venta</th><th>Estado</th></tr></thead>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Reporte de Inactividad de Venta por Tienda</div><button class="dl-btn" onclick="downloadTable('tb-inact','tiendas_inactividad')">&#8595; Descargar</button></div>
+      <table><thead><tr><th>CR Region</th><th>Nombre Region</th><th>CR Tienda</th><th>Nombre Tienda</th><th>Ultima venta</th><th class="tdc">Dias sin venta</th><th>Estado</th></tr></thead>
       <tbody id="tb-inact"></tbody></table>
     </div>
   </div>
@@ -245,8 +251,7 @@ var CH={};
 var CAT={};
 // ================================================
 // CONFIGURACION DEL PROYECTO
-// Actualizar este numero cuando se habiliten
-// nuevas tiendas en POS Movil
+// Actualizar cuando se habiliten nuevas tiendas
 // ================================================
 var TOTAL_HAB=443;
 var DIAS=['Lun','Mar','Mie','Jue','Vie','Sab','Dom'];
@@ -260,7 +265,6 @@ function getRegNombre(crReg){
   var key=Object.keys(CAT).find(function(k){return CAT[k].r===crReg;});
   return key?CAT[key].rn:crReg;
 }
-
 function doLogin(){
   var u=document.getElementById('lu').value.trim();
   var p=document.getElementById('lp').value.trim();
@@ -272,12 +276,43 @@ function doLogin(){
     document.getElementById('lerr').textContent='Usuario o contrasena incorrectos.';
   }
 }
-
 function fmt(n){return '$'+Number(n).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function fmtK(n){return n>=1000000?'$'+(n/1000000).toFixed(2)+'M':n>=1000?'$'+(n/1000).toFixed(1)+'K':fmt(n);}
 function pct(a,b){return b>0?(a/b*100).toFixed(1)+'%':'0%';}
 function dch(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
 function cod(s){return '<span class="cod">'+s+'</span>';}
+
+function setTableFooter(tbodyId,count,label){
+  var tbody=document.getElementById(tbodyId);
+  if(!tbody)return;
+  var table=tbody.closest('table');
+  if(!table)return;
+  var tfoot=table.querySelector('tfoot');
+  if(!tfoot){tfoot=document.createElement('tfoot');table.appendChild(tfoot);}
+  var cols=table.querySelector('thead tr').children.length;
+  tfoot.innerHTML='<tr><td colspan="'+cols+'" class="table-footer">Total: <strong>'+count+'</strong> '+label+'</td></tr>';
+}
+
+function downloadTable(tableId,filename){
+  var table=document.getElementById(tableId);
+  if(!table)return;
+  var rows=table.querySelectorAll('tr');
+  var csv=[];
+  rows.forEach(function(row){
+    var cols=row.querySelectorAll('th,td');
+    var rowData=[];
+    cols.forEach(function(col){
+      var text=(col.innerText||col.textContent||'').replace(/,/g,' ').replace(/[\r\n]+/g,' ').trim();
+      rowData.push('"'+text+'"');
+    });
+    csv.push(rowData.join(','));
+  });
+  var blob=new Blob(['\uFEFF'+csv.join('\n')],{type:'text/csv;charset=utf-8;'});
+  var link=document.createElement('a');
+  link.href=URL.createObjectURL(blob);
+  link.download=filename+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  link.click();
+}
 
 function parseCat(txt){
   var lines=txt.trim().split('\n');
@@ -307,31 +342,22 @@ function loadData(data){
   var fechas=D.map(function(r){return r.FECHA;}).sort();
   document.getElementById('lbl').textContent='Datos al '+fechas[fechas.length-1];
   fillFilters();
-  // Setear rango de fechas de tendencias al mes en curso por default
   var hoy=new Date();
   var ayer=new Date(hoy);ayer.setDate(ayer.getDate()-1);
   var mesHoy=hoy.getFullYear()+'-'+(hoy.getMonth()<9?'0':'')+(hoy.getMonth()+1);
-  var primerDia=mesHoy+'-01';
-  var ultimoDia=ayer.toISOString().slice(0,10);
-  document.getElementById('f-tend-ini').value=primerDia;
-  document.getElementById('f-tend-fin').value=ultimoDia;
+  document.getElementById('f-tend-ini').value=mesHoy+'-01';
+  document.getElementById('f-tend-fin').value=ayer.toISOString().slice(0,10);
   renderGen();renderReg();renderTiendasTabla();renderTend();renderRanking();renderInact();
 }
 
 function fillFilters(){
   var regs=[...new Set(D.map(function(r){return r.CR_REGION;}))].sort();
-  ['f-reg','f-t-reg','f-i-reg','f-tend-reg'].forEach(function(id){
+  ['f-reg','f-t-reg','f-i-reg','f-tend-reg','f-tend-reg2'].forEach(function(id){
     var sel=document.getElementById(id);
     if(!sel)return;
     var first=sel.options[0];
-    sel.innerHTML='';
-    sel.appendChild(first);
-    regs.forEach(function(r){
-      var o=document.createElement('option');
-      o.value=r;
-      o.textContent=r+' - '+getRegNombre(r);
-      sel.appendChild(o);
-    });
+    sel.innerHTML='';sel.appendChild(first);
+    regs.forEach(function(r){var o=document.createElement('option');o.value=r;o.textContent=r+' - '+getRegNombre(r);sel.appendChild(o);});
   });
   var meses=[...new Set(D.map(function(r){return r.FECHA.slice(0,7);}))].sort();
   ['f-gen-mes','f-reg-mes','f-t-mes'].forEach(function(id){
@@ -346,59 +372,43 @@ function fillTiendasSelect(reg){
   var sel=document.getElementById('f-tienda');
   sel.innerHTML='<option value="">Selecciona una tienda</option>';
   var ts=[...new Set(D.filter(function(r){return !reg||r.CR_REGION===reg;}).map(function(r){return r.CR_TIENDA;}))].sort();
-  ts.forEach(function(t){
-    var o=document.createElement('option');
-    o.value=t;
-    o.textContent=t+' - '+getNombre(t);
-    sel.appendChild(o);
-  });
+  ts.forEach(function(t){var o=document.createElement('option');o.value=t;o.textContent=t+' - '+getNombre(t);sel.appendChild(o);});
 }
 
 function onTRegChange(){
   var reg=document.getElementById('f-t-reg').value;
-  fillTiendasSelect(reg);
-  renderTiendasTabla();
-  renderTienda();
+  fillTiendasSelect(reg);renderTiendasTabla();renderTienda();
 }
 
 function showTab(name,el){
   document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
   document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
-  el.classList.add('active');
-  document.getElementById('panel-'+name).classList.add('active');
+  el.classList.add('active');document.getElementById('panel-'+name).classList.add('active');
 }
 
-function aggBy(field){
+function aggBy(field,src){
+  var arr=src||D;
   var map={};
-  D.forEach(function(r){var k=r[field];if(!map[k])map[k]={key:k,TOT:0,EF:0,TJ:0,txns:0};map[k].TOT+=r.TOT;map[k].EF+=r.EF;map[k].TJ+=r.TJ;map[k].txns++;});
+  arr.forEach(function(r){var k=r[field];if(!map[k])map[k]={key:k,TOT:0,EF:0,TJ:0,txns:0};map[k].TOT+=r.TOT;map[k].EF+=r.EF;map[k].TJ+=r.TJ;map[k].txns++;});
   return Object.values(map);
 }
 
 function renderGen(){
-  var mes=document.getElementById('f-gen-mes')?document.getElementById('f-gen-mes').value:'';
+  var mes=document.getElementById('f-gen-mes').value;
   var GD=mes?D.filter(function(r){return r.FECHA.slice(0,7)===mes;}):D;
   var tot=GD.reduce(function(s,r){return s+r.TOT;},0);
   var ef=GD.reduce(function(s,r){return s+r.EF;},0);
   var tj=GD.reduce(function(s,r){return s+r.TJ;},0);
   var txns=GD.length;
   var fechas=GD.map(function(r){return r.FECHA;}).sort();
-  // Fecha inicio y fin para el KPI de período
-  var mes=document.getElementById('f-gen-mes')?document.getElementById('f-gen-mes').value:'';
-  var fechaIni, fechaFin;
+  var hoy=new Date();
+  var ayer=new Date(hoy);ayer.setDate(ayer.getDate()-1);
+  var mesHoy=hoy.getFullYear()+'-'+(hoy.getMonth()<9?'0':'')+(hoy.getMonth()+1);
+  var fechaIni,fechaFin;
   if(mes){
     fechaIni=mes+'-01';
-    // Si es el mes en curso usar hoy, si es mes pasado usar último día del mes
-    var hoy=new Date();
-    var mesHoy=hoy.getFullYear()+'-'+(hoy.getMonth()<9?'0':'')+(hoy.getMonth()+1);
-    if(mes===mesHoy){
-      // Dashboard con desfase de 1 día — mostrar hasta ayer
-      var ayer=new Date(hoy);ayer.setDate(ayer.getDate()-1);
-      fechaFin=ayer.toISOString().slice(0,10);
-    } else {
-      var y=parseInt(mes.slice(0,4)), m=parseInt(mes.slice(5,7));
-      var lastDay=new Date(y, m, 0).getDate();
-      fechaFin=mes+'-'+(lastDay<10?'0':'')+lastDay;
-    }
+    if(mes===mesHoy){fechaFin=ayer.toISOString().slice(0,10);}
+    else{var y=parseInt(mes.slice(0,4)),m2=parseInt(mes.slice(5,7));var ld=new Date(y,m2,0).getDate();fechaFin=mes+'-'+(ld<10?'0':'')+ld;}
   } else {
     fechaIni='2026-01-01';
     fechaFin=fechas.length>0?fechas[fechas.length-1]:'';
@@ -411,22 +421,24 @@ function renderGen(){
   document.getElementById('k-periodo').textContent=fechaIni+' - '+fechaFin;
   document.getElementById('k-tj').textContent=fmtK(tj);document.getElementById('k-tj-p').textContent=pct(tj,tot)+' del total';
   document.getElementById('k-ef').textContent=fmtK(ef);document.getElementById('k-ef-p').textContent=pct(ef,tot)+' del total';
-  document.getElementById('k-ticket').textContent=fmt(tot/txns);
+  document.getElementById('k-ticket').textContent=txns>0?fmt(tot/txns):'-';
   document.getElementById('k-txns').textContent=txns.toLocaleString();
   document.getElementById('k-tiendas').textContent=allT+' tiendas con venta';
   document.getElementById('k-act').textContent=act.size+' / '+TOTAL_HAB;
-  document.getElementById('k-inact').textContent=(TOTAL_HAB-act.size)+' sin venta en 7 días';
+  document.getElementById('k-inact').textContent=(TOTAL_HAB-act.size)+' sin venta en 7 dias';
   var pm={};GD.forEach(function(r){var m=r.FECHA.slice(0,7);if(!pm[m])pm[m]={ef:0,tj:0};pm[m].ef+=r.EF;pm[m].tj+=r.TJ;});
   var mk=Object.keys(pm).sort();
   dch('mensual');
   CH['mensual']=new Chart(document.getElementById('ch-mensual'),{type:'bar',data:{labels:mk.map(function(m){return MLAB[m]||m;}),datasets:[{label:'Tarjeta',data:mk.map(function(m){return Math.round(pm[m].tj);}),backgroundColor:'#F5A800',borderRadius:4},{label:'Efectivo',data:mk.map(function(m){return Math.round(pm[m].ef);}),backgroundColor:'#E2001A',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{callback:function(v){return fmtK(v);},font:{size:11}},grid:{color:'#f0f0f0'}}}}});
   dch('donut');
-  CH['donut']=new Chart(document.getElementById('ch-donut'),{type:'doughnut',data:{labels:['Tarjeta','Efectivo'],datasets:[{data:[Math.round(tj),Math.round(ef)],backgroundColor:['#F5A800','#E2001A'],borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:function(c){return c.label+': '+fmtK(c.raw)+' ('+pct(c.raw,tot)+')';}}}}}});
+  CH['donut']=new Chart(document.getElementById('ch-donut'),{type:'doughnut',data:{labels:['Tarjeta','Efectivo'],datasets:[{data:[Math.round(tj),Math.round(ef)],backgroundColor:['#F5A800','#E2001A'],borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:function(c){return c.label+': '+fmtK(c.raw)+' ('+pct(c.raw,tot)+')';}}}}}}); 
   var ph=Array(24).fill(0);GD.forEach(function(r){if(r.HORA>=0&&r.HORA<24)ph[r.HORA]+=r.TOT;});
-  var mx=Math.max.apply(null,ph);
   dch('hora');
   CH['hora']=new Chart(document.getElementById('ch-hora'),{type:'bar',data:{labels:Array.from({length:24},function(_,i){return i+'h';}),datasets:[{data:ph.map(function(v){return Math.round(v);}),backgroundColor:'#2E7D32',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{ticks:{callback:function(v){return fmtK(v);},font:{size:10}},grid:{color:'#f0f0f0'}}}}});
-  var rd=(function(){var map={};GD.forEach(function(r){var k=r.CR_REGION;if(!map[k])map[k]={key:k,TOT:0,EF:0,TJ:0,txns:0};map[k].TOT+=r.TOT;map[k].EF+=r.EF;map[k].TJ+=r.TJ;map[k].txns++;});return Object.values(map);})().sort(function(a,b){return b.TOT-a.TOT;});
+  var pmC={};D.forEach(function(r){var m=r.FECHA.slice(0,7);if(!pmC[m])pmC[m]=new Set();pmC[m].add(r.CR_TIENDA);});
+  var mkC=Object.keys(pmC).sort();
+  dch('crec');
+  CH['crec']=new Chart(document.getElementById('ch-crec'),{type:'line',data:{labels:mkC.map(function(m){return MLAB[m]||m;}),datasets:[{label:'Tiendas activas',data:mkC.map(function(m){return pmC[m].size;}),borderColor:'#F5A800',backgroundColor:'rgba(245,168,0,.1)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:'#F5A800'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{ticks:{font:{size:10}},grid:{color:'#f0f0f0'}}}}});
 }
 
 function renderReg(){
@@ -437,30 +449,20 @@ function renderReg(){
   var ef=fd.reduce(function(s,r){return s+r.EF;},0);
   var tj=fd.reduce(function(s,r){return s+r.TJ;},0);
   var txns=fd.length;
-
-  // KPIs — siempre visibles
   document.getElementById('kpi-reg').innerHTML='<div class="kpi-card ar"><div class="kpi-label">Venta total</div><div class="kpi-value">'+fmtK(tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Tarjeta</div><div class="kpi-value">'+fmtK(tj)+'</div><div class="kpi-sub">'+pct(tj,tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Efectivo</div><div class="kpi-value">'+fmtK(ef)+'</div><div class="kpi-sub">'+pct(ef,tot)+'</div></div><div class="kpi-card ag"><div class="kpi-label">Transacciones</div><div class="kpi-value">'+txns.toLocaleString()+'</div></div><div class="kpi-card ar"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">'+(txns>0?fmt(tot/txns):'--')+'</div></div>';
-  document.getElementById('kpi-reg').style.display='grid';
-
   if(!reg){
-    // Vista general — Top Regiones con barra de progreso
     document.getElementById('card-reg-tiendas').style.display='none';
     document.getElementById('card-reg-tabla').style.display='block';
     document.getElementById('lbl-reg-tabla').textContent='Top Regiones';
     var allTot=D.filter(function(r){return !mes||r.FECHA.slice(0,7)===mes;}).reduce(function(s,r){return s+r.TOT;},0);
-    var rd=aggBy('CR_REGION');
-    // Recalcular con filtro de mes si aplica
-    if(mes){var fdM=D.filter(function(r){return r.FECHA.slice(0,7)===mes;});var rdM={};fdM.forEach(function(r){if(!rdM[r.CR_REGION])rdM[r.CR_REGION]={key:r.CR_REGION,TOT:0,EF:0,TJ:0,txns:0};rdM[r.CR_REGION].TOT+=r.TOT;rdM[r.CR_REGION].EF+=r.EF;rdM[r.CR_REGION].TJ+=r.TJ;rdM[r.CR_REGION].txns++;});rd=Object.values(rdM);}
-    rd.sort(function(a,b){return b.TOT-a.TOT;});
+    var rd=aggBy('CR_REGION',fd).sort(function(a,b){return b.TOT-a.TOT;});
     document.getElementById('tb-reg-resumen').innerHTML=rd.map(function(r){return'<tr><td>'+cod(r.key)+'</td><td>'+getRegNombre(r.key)+'</td><td>'+r.txns.toLocaleString()+'</td><td>'+fmtK(r.EF)+'</td><td>'+fmtK(r.TJ)+'</td><td class="tdr">'+fmtK(r.TOT)+'</td><td><div style="display:flex;align-items:center;gap:6px;"><div class="prog-wrap" style="flex:1;"><div class="prog-bar" style="width:'+pct(r.TOT,allTot)+'"></div></div><span style="font-size:11px;color:#6B6B6B;min-width:36px;">'+pct(r.TOT,allTot)+'</span></div></td></tr>';}).join('');
     setTableFooter('tb-reg-resumen',rd.length,'regiones');
   } else {
-    // Vista detalle región — Top Tiendas con barra de progreso
     document.getElementById('card-reg-tabla').style.display='none';
     document.getElementById('card-reg-tiendas').style.display='block';
-    document.getElementById('lbl-reg-tiendas').textContent='Top Tiendas — '+reg+' '+getRegNombre(reg);
-    var tm={};fd.forEach(function(r){if(!tm[r.CR_TIENDA])tm[r.CR_TIENDA]={key:r.CR_TIENDA,TOT:0,EF:0,TJ:0,txns:0};tm[r.CR_TIENDA].TOT+=r.TOT;tm[r.CR_TIENDA].EF+=r.EF;tm[r.CR_TIENDA].TJ+=r.TJ;tm[r.CR_TIENDA].txns++;});
-    var ts=Object.values(tm).sort(function(a,b){return b.TOT-a.TOT;});
+    document.getElementById('lbl-reg-tiendas').textContent='Top Tiendas - '+reg+' '+getRegNombre(reg);
+    var ts=aggBy('CR_TIENDA',fd).sort(function(a,b){return b.TOT-a.TOT;});
     document.getElementById('tb-reg-tiendas').innerHTML=ts.map(function(t){return'<tr><td>'+cod(t.key)+'</td><td>'+getNombre(t.key)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td><div style="display:flex;align-items:center;gap:6px;"><div class="prog-wrap" style="flex:1;"><div class="prog-bar" style="width:'+pct(t.TOT,tot)+'"></div></div><span style="font-size:11px;color:#6B6B6B;min-width:36px;">'+pct(t.TOT,tot)+'</span></div></td></tr>';}).join('');
     setTableFooter('tb-reg-tiendas',ts.length,'tiendas');
   }
@@ -470,9 +472,9 @@ function renderTiendasTabla(){
   var reg=document.getElementById('f-t-reg').value;
   var fd=reg?D.filter(function(r){return r.CR_REGION===reg;}):D;
   var m={};fd.forEach(function(r){var k=r.CR_REGION+'|'+r.CR_TIENDA;if(!m[k])m[k]={reg:r.CR_REGION,tienda:r.CR_TIENDA,TOT:0,EF:0,TJ:0,txns:0};m[k].TOT+=r.TOT;m[k].EF+=r.EF;m[k].TJ+=r.TJ;m[k].txns++;});
-  var _tRows=Object.values(m).sort(function(a,b){return b.TOT-a.TOT;});
-  document.getElementById('tb-tiendas').innerHTML=_tRows.map(function(t){return'<tr><td>'+cod(t.reg)+'</td><td>'+getRegNombre(t.reg)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td>'+fmt(t.TOT/t.txns)+'</td></tr>';}).join('');
-  setTableFooter('tb-tiendas',_tRows.length,'tiendas');
+  var rows=Object.values(m).sort(function(a,b){return b.TOT-a.TOT;});
+  document.getElementById('tb-tiendas').innerHTML=rows.map(function(t){return'<tr><td>'+cod(t.reg)+'</td><td>'+getRegNombre(t.reg)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.txns.toLocaleString()+'</td><td>'+fmtK(t.EF)+'</td><td>'+fmtK(t.TJ)+'</td><td class="tdr">'+fmtK(t.TOT)+'</td><td>'+fmt(t.TOT/t.txns)+'</td></tr>';}).join('');
+  setTableFooter('tb-tiendas',rows.length,'tiendas');
 }
 
 function renderTienda(){
@@ -488,7 +490,7 @@ function renderTienda(){
   var tj=fd.reduce(function(s,r){return s+r.TJ;},0);
   var txns=fd.length;
   var reg=fd[0]?fd[0].CR_REGION:'';
-  document.getElementById('kpi-tienda').innerHTML='<div class="kpi-card ar"><div class="kpi-label">Tienda</div><div class="kpi-value" style="font-size:14px;margin-top:4px;">'+getNombre(t)+'</div><div class="kpi-sub">'+cod(t)+' &nbsp;|&nbsp; '+cod(reg)+' &nbsp;|&nbsp; '+getRegNombre(reg)+'</div></div><div class="kpi-card ar"><div class="kpi-label">Venta total</div><div class="kpi-value">'+fmtK(tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Tarjeta</div><div class="kpi-value">'+fmtK(tj)+'</div><div class="kpi-sub">'+pct(tj,tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Efectivo</div><div class="kpi-value">'+fmtK(ef)+'</div><div class="kpi-sub">'+pct(ef,tot)+'</div></div><div class="kpi-card ag"><div class="kpi-label">Transacciones</div><div class="kpi-value">'+txns.toLocaleString()+'</div></div><div class="kpi-card ar"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">'+fmt(tot/txns)+'</div></div>';
+  document.getElementById('kpi-tienda').innerHTML='<div class="kpi-card ar"><div class="kpi-label">Tienda</div><div class="kpi-value" style="font-size:14px;margin-top:4px;">'+getNombre(t)+'</div><div class="kpi-sub">'+cod(t)+' | '+cod(reg)+' | '+getRegNombre(reg)+'</div></div><div class="kpi-card ar"><div class="kpi-label">Venta total</div><div class="kpi-value">'+fmtK(tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Tarjeta</div><div class="kpi-value">'+fmtK(tj)+'</div><div class="kpi-sub">'+pct(tj,tot)+'</div></div><div class="kpi-card ay"><div class="kpi-label">Efectivo</div><div class="kpi-value">'+fmtK(ef)+'</div><div class="kpi-sub">'+pct(ef,tot)+'</div></div><div class="kpi-card ag"><div class="kpi-label">Transacciones</div><div class="kpi-value">'+txns.toLocaleString()+'</div></div><div class="kpi-card ar"><div class="kpi-label">Ticket promedio</div><div class="kpi-value">'+fmt(tot/txns)+'</div></div>';
   var pf={};fd.forEach(function(r){if(!pf[r.FECHA])pf[r.FECHA]={TOT:0,EF:0,TJ:0,txns:0};pf[r.FECHA].TOT+=r.TOT;pf[r.FECHA].EF+=r.EF;pf[r.FECHA].TJ+=r.TJ;pf[r.FECHA].txns++;});
   var fk=Object.keys(pf).sort();
   dch('t-diario');
@@ -496,7 +498,7 @@ function renderTienda(){
   CH['t-diario']=new Chart(document.getElementById('ch-t-diario'),{type:'line',data:{labels:fk.map(function(f){return f.slice(5);}),datasets:[{label:'Venta',data:fk.map(function(f){return Math.round(pf[f].TOT);}),borderColor:'#E2001A',backgroundColor:'rgba(226,0,26,.08)',fill:true,tension:.3,pointRadius:3,pointBackgroundColor:'#E2001A'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{ticks:{callback:function(v){return fmtK(v);},font:{size:10}},grid:{color:'#f0f0f0'}}}}});
   document.getElementById('card-t-detalle').style.display='block';
   document.getElementById('tb-t-detalle').innerHTML=fk.map(function(f){return'<tr><td>'+f+'</td><td>'+pf[f].txns+'</td><td>'+fmtK(pf[f].EF)+'</td><td>'+fmtK(pf[f].TJ)+'</td><td class="tdr">'+fmtK(pf[f].TOT)+'</td></tr>';}).join('');
-  setTableFooter('tb-t-detalle',fk.length,'días');
+  setTableFooter('tb-t-detalle',fk.length,'dias');
 }
 
 function getTendFiltro(){
@@ -508,20 +510,19 @@ function getTendFiltro(){
 
 function renderTend(){
   var fd=getTendFiltro();
-  var pf={};fd.forEach(function(r){if(!pf[r.FECHA])pf[r.FECHA]=0;pf[r.FECHA]+=r.TOT;});
+  var reg2=document.getElementById('f-tend-reg2').value;
+  var fdR=reg2?fd.filter(function(r){return r.CR_REGION===reg2;}):fd;
+  var pf={};fdR.forEach(function(r){if(!pf[r.FECHA])pf[r.FECHA]=0;pf[r.FECHA]+=r.TOT;});
   var fk=Object.keys(pf).sort();
   dch('diario');
   CH['diario']=new Chart(document.getElementById('ch-diario'),{type:'line',data:{labels:fk.map(function(f){return f.slice(5);}),datasets:[{label:'Venta diaria',data:fk.map(function(f){return Math.round(pf[f]);}),borderColor:'#E2001A',backgroundColor:'rgba(226,0,26,.07)',fill:true,tension:.3,pointRadius:2,pointBackgroundColor:'#E2001A'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:12,font:{size:10}}},y:{ticks:{callback:function(v){return fmtK(v);},font:{size:10}},grid:{color:'#f0f0f0'}}}}});
-  var pd=Array(7).fill(0);fd.forEach(function(r){var d=new Date(r.FECHA+'T00:00:00').getDay();pd[(d+6)%7]+=r.TOT;});
+  var pd=Array(7).fill(0);fdR.forEach(function(r){var d=new Date(r.FECHA+'T00:00:00').getDay();pd[(d+6)%7]+=r.TOT;});
   var mx=Math.max.apply(null,pd);
   dch('diasem');
   CH['diasem']=new Chart(document.getElementById('ch-diasem'),{type:'bar',data:{labels:DIAS,datasets:[{data:pd.map(function(v){return Math.round(v);}),backgroundColor:pd.map(function(v){return v===mx?'#E2001A':'#F5A800';}),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{ticks:{callback:function(v){return fmtK(v);},font:{size:10}},grid:{color:'#f0f0f0'}}}}});
-  var pm={};D.forEach(function(r){var m=r.FECHA.slice(0,7);if(!pm[m])pm[m]={tot:0,ts:new Set()};pm[m].tot+=r.TOT;pm[m].ts.add(r.CR_TIENDA);});
-  var mk=Object.keys(pm).sort();
-  dch('mensual2');
-  CH['mensual2']=new Chart(document.getElementById('ch-mensual2'),{type:'bar',data:{labels:mk.map(function(m){return MLAB[m]||m;}),datasets:[{label:'Venta',data:mk.map(function(m){return Math.round(pm[m].tot);}),backgroundColor:'#E2001A',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{ticks:{callback:function(v){return fmtK(v);},font:{size:10}},grid:{color:'#f0f0f0'}}}}});
-  dch('crec');
-  CH['crec']=new Chart(document.getElementById('ch-crec'),{type:'line',data:{labels:mk.map(function(m){return MLAB[m]||m;}),datasets:[{label:'Tiendas activas',data:mk.map(function(m){return pm[m].ts.size;}),borderColor:'#F5A800',backgroundColor:'rgba(245,168,0,.1)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:'#F5A800'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{ticks:{font:{size:10}},grid:{color:'#f0f0f0'}}}}});
+  var ph=Array(24).fill(0);fdR.forEach(function(r){if(r.HORA>=0&&r.HORA<24)ph[r.HORA]+=r.TOT;});
+  dch('hora-tend');
+  CH['hora-tend']=new Chart(document.getElementById('ch-hora-tend'),{type:'bar',data:{labels:Array.from({length:24},function(_,i){return i+'h';}),datasets:[{data:ph.map(function(v){return Math.round(v);}),backgroundColor:'#2E7D32',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:10}}},y:{ticks:{callback:function(v){return fmtK(v);},font:{size:10}},grid:{color:'#f0f0f0'}}}}});
   renderRanking();
 }
 
@@ -530,9 +531,9 @@ function renderRanking(){
   var reg=document.getElementById('f-tend-reg').value;
   var fdReg=reg?fd.filter(function(r){return r.CR_REGION===reg;}):fd;
   var tm={};fdReg.forEach(function(r){if(!tm[r.CR_TIENDA])tm[r.CR_TIENDA]={tienda:r.CR_TIENDA,reg:r.CR_REGION,TOT:0,txns:0};tm[r.CR_TIENDA].TOT+=r.TOT;tm[r.CR_TIENDA].txns++;});
-  var _rkRows=Object.values(tm).sort(function(a,b){return a.TOT-b.TOT;});
-  document.getElementById('tb-tend-ranking').innerHTML=_rkRows.map(function(t,i){return'<tr><td>'+(i+1)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+cod(t.reg)+'</td><td>'+getRegNombre(t.reg)+'</td><td>'+t.txns.toLocaleString()+'</td><td class="tdr">'+fmtK(t.TOT)+'</td></tr>';}).join('');
-  setTableFooter('tb-tend-ranking',_rkRows.length,'tiendas');
+  var rows=Object.values(tm).sort(function(a,b){return a.TOT-b.TOT;});
+  document.getElementById('tb-tend-ranking').innerHTML=rows.map(function(t,i){return'<tr><td>'+(i+1)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+cod(t.reg)+'</td><td>'+getRegNombre(t.reg)+'</td><td>'+t.txns.toLocaleString()+'</td><td class="tdr">'+fmtK(t.TOT)+'</td></tr>';}).join('');
+  setTableFooter('tb-tend-ranking',rows.length,'tiendas');
 }
 
 function renderInact(){
@@ -556,55 +557,16 @@ function renderInact(){
   setTableFooter('tb-inact',inact.length,'tiendas');
   document.getElementById('tb-inact').innerHTML=inact.map(function(t){
     var badge,dot,label;
-    if(semaforo==='verde'){
-      badge='<span class="badge badge-green">'+t.dias+' días</span>';
-      dot='dot-g';label='Activa';
-    } else if(semaforo==='amarillo'){
-      badge='<span class="badge badge-yellow">'+t.dias+' días</span>';
-      dot='dot-y';label='Sin venta reciente';
-    } else {
-      badge='<span class="badge badge-red">+'+t.dias+' días</span>';
-      dot='dot-r';label='Inactiva';
-    }
+    if(semaforo==='verde'){badge='<span class="badge badge-green">'+t.dias+' dias</span>';dot='dot-g';label='Activa';}
+    else if(semaforo==='amarillo'){badge='<span class="badge badge-yellow">'+t.dias+' dias</span>';dot='dot-y';label='Sin venta reciente';}
+    else{badge='<span class="badge badge-red">+'+t.dias+' dias</span>';dot='dot-r';label='Inactiva';}
     return'<tr><td>'+cod(t.region)+'</td><td>'+getRegNombre(t.region)+'</td><td>'+cod(t.tienda)+'</td><td>'+getNombre(t.tienda)+'</td><td>'+t.fecha+'</td><td class="tdc">'+badge+'</td><td><span class="dot '+dot+'"></span>'+label+'</td></tr>';
   }).join('');
 }
 
-function downloadTable(tableId, filename){
-  var table=document.getElementById(tableId);
-  if(!table)return;
-  var rows=table.querySelectorAll('tr');
-  var csv=[];
-  rows.forEach(function(row){
-    var cols=row.querySelectorAll('th,td');
-    var rowData=[];
-    cols.forEach(function(col){
-      var text=(col.innerText||col.textContent||'').replace(/,/g,' ').replace(/[\r\n]+/g,' ').trim();
-      rowData.push('"'+text+'"');
-    });
-    csv.push(rowData.join(','));
-  });
-  var blob=new Blob(['\uFEFF'+csv.join('\n')],{type:'text/csv;charset=utf-8;'});
-  var link=document.createElement('a');
-  link.href=URL.createObjectURL(blob);
-  link.download=filename+'_'+new Date().toISOString().slice(0,10)+'.csv';
-  link.click();
-}
-
-function setTableFooter(tbodyId, count, label){
-  var tbody=document.getElementById(tbodyId);
-  if(!tbody)return;
-  var table=tbody.closest('table');
-  if(!table)return;
-  var tfoot=table.querySelector('tfoot');
-  if(!tfoot){tfoot=document.createElement('tfoot');table.appendChild(tfoot);}
-  var cols=table.querySelector('thead tr').children.length;
-  tfoot.innerHTML='<tr><td colspan="'+cols+'" class="table-footer">Total: <strong>'+count+'</strong> '+label+'</td></tr>';
-}
-
 async function autoLoad(){
   try{
-    document.getElementById('loading-msg').textContent='Cargando catálogo de tiendas...';
+    document.getElementById('loading-msg').textContent='Cargando catalogo de tiendas...';
     var r1=await fetch(CAT_URL+'?t='+Date.now());
     if(!r1.ok)throw new Error('cat');
     CAT=parseCat(await r1.text());
