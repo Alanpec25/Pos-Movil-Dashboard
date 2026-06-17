@@ -294,18 +294,31 @@ function setTableFooter(tbodyId,count,label){
 }
 
 function downloadTable(tableId,filename){
-  var table=document.getElementById(tableId);
+  var tbody=document.getElementById(tableId);
+  if(!tbody)return;
+  var table=tbody.closest('table');
   if(!table)return;
-  var rows=table.querySelectorAll('tr');
   var csv=[];
+  // Encabezados
+  var headers=table.querySelectorAll('thead th');
+  if(headers.length){
+    var headerRow=[];
+    headers.forEach(function(th){
+      var text=(th.innerText||th.textContent||'').replace(/,/g,' ').replace(/[\r\n]+/g,' ').trim();
+      headerRow.push('"'+text+'"');
+    });
+    csv.push(headerRow.join(','));
+  }
+  // Filas de datos
+  var rows=tbody.querySelectorAll('tr');
   rows.forEach(function(row){
-    var cols=row.querySelectorAll('th,td');
+    var cols=row.querySelectorAll('td');
     var rowData=[];
     cols.forEach(function(col){
       var text=(col.innerText||col.textContent||'').replace(/,/g,' ').replace(/[\r\n]+/g,' ').trim();
       rowData.push('"'+text+'"');
     });
-    csv.push(rowData.join(','));
+    if(rowData.length)csv.push(rowData.join(','));
   });
   var blob=new Blob(['\uFEFF'+csv.join('\n')],{type:'text/csv;charset=utf-8;'});
   var link=document.createElement('a');
