@@ -346,13 +346,21 @@ function parseCat(txt){
   return cat;
 }
 
+function normFecha(f){
+  // Convierte "M/D/YYYY" o "MM/DD/YYYY" (formato mes/día/año, sin ceros obligatorios) a "YYYY-MM-DD" (ISO)
+  var m=f.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(!m)return f; // si ya viene en otro formato (p.ej. ISO), se deja igual
+  var mm=m[1],dd=m[2],yyyy=m[3];
+  return yyyy+'-'+(mm.length<2?'0'+mm:mm)+'-'+(dd.length<2?'0'+dd:dd);
+}
+
 function parseCSV(txt){
   var lines=txt.trim().split('\n');
   var s=0;
   if(isNaN(parseFloat(lines[0].split(',')[4])))s=1;
   return lines.slice(s).map(function(l){
     var p=l.split(',');
-    return{CR_REGION:(p[0]||'').trim().toUpperCase(),CR_TIENDA:(p[1]||'').trim().toUpperCase(),FECHA:(p[2]||'').trim(),HORA:parseInt((p[3]||'00').trim().split(':')[0]),EF:parseFloat(p[4])||0,TJ:parseFloat(p[5])||0,TOT:parseFloat(p[6])||0};
+    return{CR_REGION:(p[0]||'').trim().toUpperCase(),CR_TIENDA:(p[1]||'').trim().toUpperCase(),FECHA:normFecha((p[2]||'').trim()),HORA:parseInt((p[3]||'00').trim().split(':')[0]),EF:parseFloat(p[4])||0,TJ:parseFloat(p[5])||0,TOT:parseFloat(p[6])||0};
   }).filter(function(r){return r.CR_TIENDA&&r.FECHA;});
 }
 
